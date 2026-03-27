@@ -1,28 +1,178 @@
 /* ============================================================
    LEGACY WEB STUDIO — Main JavaScript
+   Sunset canvas · Scroll animation · Nav · Form
    ============================================================ */
 
 'use strict';
 
-/* ---- NAV SCROLL BEHAVIOUR ---- */
-const navHeader = document.getElementById('nav-header');
+/* =========================================================
+   1. SUNSET CANVAS ANIMATION
+   Scroll-driven: progress 0→1 as hero scrolls by.
+   Reverses automatically when scrolling back up.
+   ========================================================= */
+class SunsetCanvas {
+  constructor(el) {
+    this.canvas  = el;
+    this.ctx     = el.getContext('2d');
+    this.hero    = document.getElementById('home');
+    this.scroll  = 0;   // 0–1
+    this.time    = 0;
+    this.running = true;
+    this.w = 0;
+    this.h = 0;
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-const handleNavScroll = () => {
-  navHeader.classList.toggle('scrolled', window.scrollY > 40);
+    // Orbs: bx/by = base position (0–1), r = radius fraction,
+    // c0 = dawn colour, c1 = dusk colour, speed/phase = float params
+    this.orbs = [
+      { bx:0.72, by:0.40, r:0.50, c0:[74,20,140],   c1:[212,70,10],   s:0.60, p:0.00 },
+      { bx:0.88, by:0.68, r:0.43, c0:[148,24,138],  c1:[238,130,6],   s:0.45, p:1.25 },
+      { bx:0.55, by:0.82, r:0.38, c0:[224,60,20],   c1:[245,155,6],   s:0.80, p:2.50 },
+      { bx:0.80, by:0.18, r:0.30, c0:[44,26,100],   c1:[168,22,148],  s:0.55, p:3.75 },
+      { bx:0.42, by:0.55, r:0.28, c0:[100,10,80],   c1:[195,80,10],   s:0.70, p:5.00 },
+    ];
+
+    this._resize();
+    window.addEventListener('resize', () => this._resize(), { passive: true });
+    this._loop();
+  }
+
+  _resize() {
+    this.dpr  = Math.min(window.devicePixelRatio || 1, 2);
+    this.w    = this.canvas.offsetWidth;
+    this.h    = this.canvas.offsetHeight;
+    this.canvas.width  = this.w * this.dpr;
+    this.canvas.height = this.h * this.dpr;
+  }
+
+  setScroll(p) {
+    this.scroll = Math.max(0, Math.min(1, p));
+  }
+
+  _lerp(a, b, t)  { return a + (b - a) * t; }
+  _lc(c0, c1, t)  {
+    return [
+      Math.round(this._lerp(c0[0], c1[0], t)),
+      Math.round(this._lerp(c0[1], c1[1], t)),
+      Math.round(this._lerp(c0[2], c1[2], t)),
+    ];
+  }
+
+  _draw() {
+    const { ctx, w, h, time: t, scroll: sp, dpr } = this;
+
+    // Scale for DPR
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // ── Background gradient ──────────────────────────────
+    //   dawn (sp=0): deep indigo → purple → magenta
+    //   dusk (sp=1): dark navy  → coral  → amber
+    const bg = ctx.createLinearGradient(0, 0, w * 0.4, h);
+
+    const s0 = this._lc([28, 10, 70],   [12,  5, 30],  sp);
+    const s1 = this._lc([74, 20, 140],  [100, 15,  5], sp);
+    const s2 = this._lc([155,27, 140],  [210, 75, 10], sp);
+    const s3 = this._lc([210,60,  30],  [240,140,  6], sp);
+
+    bg.addColorStop(0,    `rgb(${s0})`);
+    bg.addColorStop(0.30, `rgb(${s1})`);
+    bg.addColorStop(0.65, `rgb(${s2})`);
+    bg.addColorStop(1,    `rgb(${s3})`);
+
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    // ── Orbs (screen blend — additive light) ────────────
+    ctx.globalCompositeOperation = 'screen';
+
+    this.orbs.forEach((orb, i) => {
+      const fx = Math.sin(t * orb.s       + orb.p) * 0.038;
+      const fy = Math.cos(t * orb.s * 0.7 + orb.p) * 0.030;
+
+      // Scroll shifts orbs: even-indexed drift right/down, odd drift left/down
+      const sdx = sp * 0.08 * (i % 2 === 0 ?  0.6 : -0.4);
+      const sdy = sp * 0.06;
+
+      const x = (orb.bx + fx + sdx) * w;
+      const y = (orb.by + fy + sdy) * h;
+      const r = orb.r * Math.min(w, h) * (1 + sp * 0.12);
+
+      const [cr, cg, cb] = this._lc(orb.c0, orb.c1, sp);
+
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0,   `rgba(${cr},${cg},${cb},0.62)`);
+      g.addColorStop(0.4, `rgba(${cr},${cg},${cb},0.22)`);
+      g.addColorStop(1,   `rgba(${cr},${cg},${cb},0)`);
+
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.globalCompositeOperation = 'source-over';
+
+    // ── Horizon glow ─────────────────────────────────────
+    const hy = h * this._lerp(0.62, 0.48, sp);
+    const hg = ctx.createLinearGradient(0, hy - h * 0.15, 0, hy + h * 0.18);
+    const [hr, hgr, hb] = this._lc([255,175,90], [255,200,50], sp);
+    const ha = 0.10 + sp * 0.08;
+    hg.addColorStop(0,   `rgba(${hr},${hgr},${hb},0)`);
+    hg.addColorStop(0.5, `rgba(${hr},${hgr},${hb},${ha})`);
+    hg.addColorStop(1,   `rgba(${hr},${hgr},${hb},0)`);
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, hy - h * 0.15, w, h * 0.33);
+  }
+
+  _loop() {
+    if (!this.running) return;
+    this.time += 0.004;
+    this._draw();
+    requestAnimationFrame(() => this._loop());
+  }
+
+  destroy() { this.running = false; }
+}
+
+// Initialise canvas
+const heroCanvas = document.getElementById('hero-canvas');
+const heroSection = document.getElementById('home');
+let sunset = null;
+
+if (heroCanvas && heroSection) {
+  sunset = new SunsetCanvas(heroCanvas);
+
+  // Update scroll progress every frame via passive scroll listener
+  const updateScroll = () => {
+    if (!sunset) return;
+    const heroH = heroSection.offsetHeight;
+    sunset.setScroll(window.scrollY / heroH);
+  };
+
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  updateScroll();
+}
+
+/* =========================================================
+   2. NAV: scroll state + hamburger
+   ========================================================= */
+const navHeader = document.getElementById('nav-header');
+const hamburger = document.getElementById('hamburger');
+const navLinks  = document.getElementById('nav-links');
+
+const setNavScrolled = () => {
+  navHeader.classList.toggle('scrolled', window.scrollY > 50);
 };
 
-window.addEventListener('scroll', handleNavScroll, { passive: true });
-handleNavScroll();
+window.addEventListener('scroll', setNavScrolled, { passive: true });
+setNavScrolled();
 
-/* ---- MOBILE HAMBURGER ---- */
-const hamburger   = document.getElementById('hamburger');
-const navLinks    = document.getElementById('nav-links');
-
+// Hamburger toggle
 hamburger.addEventListener('click', () => {
-  const isOpen = hamburger.classList.toggle('open');
-  navLinks.classList.toggle('open', isOpen);
-  hamburger.setAttribute('aria-expanded', String(isOpen));
-  document.body.style.overflow = isOpen ? 'hidden' : '';
+  const open = hamburger.classList.toggle('open');
+  navLinks.classList.toggle('open', open);
+  hamburger.setAttribute('aria-expanded', String(open));
+  document.body.style.overflow = open ? 'hidden' : '';
 });
 
 // Close on nav link click
@@ -45,145 +195,122 @@ document.addEventListener('click', e => {
   }
 });
 
-/* ---- INTERSECTION OBSERVER ANIMATIONS ---- */
-const observerOptions = {
-  threshold: 0.12,
-  rootMargin: '0px 0px -40px 0px',
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('in-view');
-      observer.unobserve(entry.target);
+/* =========================================================
+   3. SCROLL-IN ANIMATIONS (IntersectionObserver)
+   ========================================================= */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in-view');
+      io.unobserve(e.target);
     }
   });
-}, observerOptions);
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-document.querySelectorAll('.fade-up, .fade-up-stagger').forEach(el => {
-  observer.observe(el);
-});
+document.querySelectorAll('.fade-in, .stagger-in').forEach(el => io.observe(el));
 
-/* ---- CONTACT FORM VALIDATION & SUBMISSION ---- */
-const form       = document.getElementById('contact-form');
-const submitBtn  = document.getElementById('submit-btn');
-const successMsg = document.getElementById('form-success');
-
-const validators = {
-  name: {
-    el:    document.getElementById('name'),
-    err:   document.getElementById('name-error'),
-    check: v => v.trim().length >= 2,
-    msg:   'Please enter your full name.',
-  },
-  firm: {
-    el:    document.getElementById('firm'),
-    err:   document.getElementById('firm-error'),
-    check: v => v.trim().length >= 2,
-    msg:   'Please enter your firm name.',
-  },
-  email: {
-    el:    document.getElementById('email'),
-    err:   document.getElementById('email-error'),
-    check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-    msg:   'Please enter a valid email address.',
-  },
-  message: {
-    el:    document.getElementById('message'),
-    err:   document.getElementById('message-error'),
-    check: v => v.trim().length >= 20,
-    msg:   'Please tell us a little more about your firm (at least 20 characters).',
-  },
-};
-
-const validateField = (key) => {
-  const { el, err, check, msg } = validators[key];
-  const valid = check(el.value);
-  el.classList.toggle('error', !valid);
-  err.textContent = valid ? '' : msg;
-  return valid;
-};
-
-// Live validation on blur
-Object.keys(validators).forEach(key => {
-  validators[key].el.addEventListener('blur', () => validateField(key));
-  validators[key].el.addEventListener('input', () => {
-    if (validators[key].el.classList.contains('error')) validateField(key);
-  });
-});
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  // Validate all fields
-  const results = Object.keys(validators).map(k => validateField(k));
-  if (results.includes(false)) {
-    // Focus first invalid field
-    const firstInvalid = Object.values(validators).find(v => v.el.classList.contains('error'));
-    if (firstInvalid) firstInvalid.el.focus();
-    return;
-  }
-
-  // Set loading state
-  submitBtn.classList.add('btn--loading');
-  submitBtn.disabled = true;
-  successMsg.classList.remove('visible');
-
-  try {
-    // Collect form data
-    const data = {
-      name:    validators.name.el.value.trim(),
-      firm:    validators.firm.el.value.trim(),
-      email:   validators.email.el.value.trim(),
-      phone:   document.getElementById('phone').value.trim(),
-      message: validators.message.el.value.trim(),
-    };
-
-    // -------------------------------------------------------
-    // TODO: Replace this fetch with your actual endpoint.
-    // Options: Formspree, Netlify Forms, EmailJS, or a
-    // serverless function that sends via your Google Workspace.
-    // Example Formspree endpoint:
-    //   const res = await fetch('https://formspree.io/f/YOUR_ID', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    //     body: JSON.stringify(data),
-    //   });
-    // -------------------------------------------------------
-
-    // DEMO: simulate a 1.2s network request
-    await new Promise(resolve => setTimeout(resolve, 1200));
-
-    // On success
-    form.reset();
-    successMsg.textContent = '✓ Thank you — we\'ve received your enquiry and will be in touch within one business day.';
-    successMsg.classList.add('visible');
-    successMsg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-  } catch (err) {
-    successMsg.textContent = 'Something went wrong. Please email us directly at usman@legacywebstudio.co.uk';
-    successMsg.style.background = '#ffebee';
-    successMsg.style.borderColor = '#ef9a9a';
-    successMsg.style.color = '#c62828';
-    successMsg.classList.add('visible');
-  } finally {
-    submitBtn.classList.remove('btn--loading');
-    submitBtn.disabled = false;
-  }
-});
-
-/* ---- FOOTER YEAR ---- */
-const yearEl = document.getElementById('footer-year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-/* ---- SMOOTH SCROLL POLYFILL FOR OLDER BROWSERS ---- */
-// Only applied to anchor clicks (native scroll-behavior handles modern browsers)
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    const target = document.querySelector(this.getAttribute('href'));
+/* =========================================================
+   4. SMOOTH SCROLL for anchor links
+   ========================================================= */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
     if (!target) return;
     e.preventDefault();
-    const top = target.getBoundingClientRect().top + window.scrollY - 80;
+    const top = target.getBoundingClientRect().top + window.scrollY - 76;
     window.scrollTo({ top, behavior: 'smooth' });
   });
 });
+
+/* =========================================================
+   5. CONTACT FORM VALIDATION
+   ========================================================= */
+const form      = document.getElementById('contact-form');
+const submitBtn = document.getElementById('submit-btn');
+const formSuccess = document.getElementById('form-success');
+
+const fields = {
+  name:    { el: document.getElementById('name'),    err: document.getElementById('name-error'),    check: v => v.trim().length >= 2,            msg: 'Please enter your full name.' },
+  firm:    { el: document.getElementById('firm'),    err: document.getElementById('firm-error'),    check: v => v.trim().length >= 2,            msg: 'Please enter your firm name.' },
+  email:   { el: document.getElementById('email'),  err: document.getElementById('email-error'),  check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()), msg: 'Please enter a valid email address.' },
+  message: { el: document.getElementById('message'), err: document.getElementById('message-error'), check: v => v.trim().length >= 20,           msg: 'Please add a little more detail (20+ characters).' },
+};
+
+const validateField = key => {
+  const f = fields[key];
+  const ok = f.check(f.el.value);
+  f.el.classList.toggle('error', !ok);
+  f.err.textContent = ok ? '' : f.msg;
+  return ok;
+};
+
+Object.keys(fields).forEach(k => {
+  fields[k].el.addEventListener('blur',  () => validateField(k));
+  fields[k].el.addEventListener('input', () => {
+    if (fields[k].el.classList.contains('error')) validateField(k);
+  });
+});
+
+if (form) {
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const valid = Object.keys(fields).map(k => validateField(k)).every(Boolean);
+    if (!valid) {
+      const first = Object.values(fields).find(f => f.el.classList.contains('error'));
+      if (first) first.el.focus();
+      return;
+    }
+
+    submitBtn.classList.add('btn--loading');
+    submitBtn.disabled = true;
+    formSuccess.classList.remove('visible');
+
+    try {
+      // ─────────────────────────────────────────────────────────
+      // TODO: Replace with your actual form endpoint.
+      // Recommended: Formspree (formspree.io) — free tier covers
+      // up to 50 submissions/month, no server needed.
+      //
+      // Example:
+      //   const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      //     body: JSON.stringify({
+      //       name:    fields.name.el.value.trim(),
+      //       firm:    fields.firm.el.value.trim(),
+      //       email:   fields.email.el.value.trim(),
+      //       phone:   document.getElementById('phone').value.trim(),
+      //       message: fields.message.el.value.trim(),
+      //     }),
+      //   });
+      //   if (!res.ok) throw new Error();
+      // ─────────────────────────────────────────────────────────
+
+      // Simulated delay (remove when using real endpoint)
+      await new Promise(r => setTimeout(r, 1100));
+
+      form.reset();
+      formSuccess.textContent = '✓  Thank you — we\'ve received your message and will be in touch within one business day.';
+      formSuccess.style.cssText = '';
+      formSuccess.classList.add('visible');
+      formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    } catch {
+      formSuccess.textContent = 'Something went wrong — please email us directly at usman@legacywebstudio.co.uk';
+      formSuccess.style.background = '#FFF5F5';
+      formSuccess.style.borderColor = '#FCA5A5';
+      formSuccess.style.color = '#DC2626';
+      formSuccess.classList.add('visible');
+    } finally {
+      submitBtn.classList.remove('btn--loading');
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+/* =========================================================
+   6. FOOTER YEAR
+   ========================================================= */
+const yearEl = document.getElementById('footer-year');
+if (yearEl) yearEl.textContent = new Date().getFullYear();

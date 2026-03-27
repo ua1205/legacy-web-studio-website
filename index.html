@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Legacy Web Studio — Premium web design for estate planning and probate law firms. We build websites that convert clients and command authority." />
-  <meta name="keywords" content="web design estate planning lawyers, probate law firm websites, legal web design UK" />
-  <meta property="og:title" content="Legacy Web Studio | Web Design for Estate Planning & Probate Lawyers" />
-  <meta property="og:description" content="We build high-converting websites exclusively for estate planning and probate law firms." />
+  <meta name="description" content="Legacy Web Studio — Bespoke websites for estate planning and probate solicitors. Warm, professional, conversion-focused. Book a free strategy call." />
+  <meta name="keywords" content="web design estate planning solicitors, probate law firm websites, legal web design UK, estate planning website" />
+  <meta property="og:title" content="Legacy Web Studio | Websites for Estate Planning & Probate Solicitors" />
+  <meta property="og:description" content="Bespoke, high-converting websites for estate planning and probate law firms across the UK." />
   <meta property="og:url" content="https://legacywebstudio.co.uk" />
   <meta property="og:type" content="website" />
-  <title>Legacy Web Studio | Web Design for Estate Planning &amp; Probate Lawyers</title>
+  <title>Legacy Web Studio | Websites for Estate Planning &amp; Probate Solicitors</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
 </head>
@@ -21,13 +21,21 @@
   <!-- ===== NAVIGATION ===== -->
   <header class="nav-header" id="nav-header">
     <nav class="nav container">
-      <a href="#" class="nav__logo">Legacy<span>Web</span>Studio</a>
+      <a href="#home" class="nav__logo-link" aria-label="Legacy Web Studio — Home">
+        <div class="nav__logo-pill" id="nav-logo-pill">
+          <img src="assets/images/logos/logo-compressed.png" alt="Legacy Web Studio" class="nav__logo-img" id="nav-logo-img" />
+        </div>
+      </a>
       <ul class="nav__links" id="nav-links">
-        <li><a href="#why-us" class="nav__link">Why Us</a></li>
-        <li><a href="#services" class="nav__link">Services</a></li>
+        <li><a href="#why-us"    class="nav__link">Why Us</a></li>
+        <li><a href="#services"  class="nav__link">Services</a></li>
         <li><a href="#portfolio" class="nav__link">Portfolio</a></li>
-        <li><a href="#about" class="nav__link">About</a></li>
-        <li><a href="#contact" class="nav__link nav__link--cta">Get in Touch</a></li>
+        <li><a href="#about"     class="nav__link">About</a></li>
+        <li>
+          <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="nav__link nav__link--cta">
+            Book a Call
+          </a>
+        </li>
       </ul>
       <button class="nav__hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -39,159 +47,265 @@
 
     <!-- ===== HERO ===== -->
     <section class="hero" id="home">
-      <div class="hero__bg"></div>
-      <div class="container hero__content">
-        <p class="hero__eyebrow">Exclusively for Estate Planning &amp; Probate Law Firms</p>
-        <h1 class="hero__headline">Your Website Should <br /><span class="hero__accent">Command Authority.</span></h1>
-        <p class="hero__sub">We design and build premium, conversion-focused websites for estate planning and probate solicitors across the UK — helping firms attract more clients and instil immediate trust.</p>
-        <div class="hero__actions">
-          <a href="#contact" class="btn btn--primary">Book a Free Strategy Call</a>
-          <a href="#portfolio" class="btn btn--ghost">View Our Work</a>
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero__overlay" aria-hidden="true"></div>
+
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <span class="hero__eyebrow">Estate Planning &amp; Probate Law Firms</span>
+          <h1 class="hero__headline">
+            The Website Your<br />
+            Law Firm Has Always<br />
+            <em>Deserved.</em>
+          </h1>
+          <p class="hero__sub">
+            We design and build bespoke, conversion-focused websites for estate planning and probate solicitors across the UK — helping families find the right firm at the most important moments in their lives.
+          </p>
+          <div class="hero__actions">
+            <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="btn btn--warm">
+              Book a Free Strategy Call
+            </a>
+            <a href="#portfolio" class="btn btn--outline-light">See Our Work</a>
+          </div>
+          <div class="hero__trust">
+            <div class="hero__trust-pill">UK-Based</div>
+            <div class="hero__trust-pill">Legal Sector Specialists</div>
+            <div class="hero__trust-pill">No Templates. Ever.</div>
+          </div>
         </div>
-        <div class="hero__trust">
-          <span class="hero__trust-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#4A148C" opacity="0.15"/><path d="M4.5 8l2.5 2.5 4.5-5" stroke="#4A148C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> No generic templates</span>
-          <span class="hero__trust-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#4A148C" opacity="0.15"/><path d="M4.5 8l2.5 2.5 4.5-5" stroke="#4A148C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> UK-focused SEO</span>
-          <span class="hero__trust-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#4A148C" opacity="0.15"/><path d="M4.5 8l2.5 2.5 4.5-5" stroke="#4A148C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Built for conversions</span>
+
+        <!-- CSS browser mockup -->
+        <div class="hero__mockup" aria-hidden="true">
+          <div class="mockup__chrome">
+            <div class="mockup__dots">
+              <span class="dot dot--red"></span>
+              <span class="dot dot--amber"></span>
+              <span class="dot dot--green"></span>
+            </div>
+            <div class="mockup__url-bar">legacywebstudio.co.uk</div>
+          </div>
+          <div class="mockup__screen">
+            <div class="mockup__nav-strip"></div>
+            <div class="mockup__hero-stripe">
+              <div class="mockup__headline-line mockup__headline-line--wide"></div>
+              <div class="mockup__headline-line mockup__headline-line--medium"></div>
+              <div class="mockup__cta-pill"></div>
+            </div>
+            <div class="mockup__cards-row">
+              <div class="mockup__card"></div>
+              <div class="mockup__card"></div>
+              <div class="mockup__card"></div>
+            </div>
+            <div class="mockup__text-rows">
+              <div class="mockup__text-line"></div>
+              <div class="mockup__text-line mockup__text-line--short"></div>
+              <div class="mockup__text-line"></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="hero__scroll-indicator">
-        <span></span>
+
+      <div class="hero__scroll-hint" aria-hidden="true">
+        <span class="hero__scroll-label">Scroll</span>
+        <div class="hero__scroll-line"></div>
       </div>
     </section>
 
     <!-- ===== WHY US ===== -->
     <section class="why-us section" id="why-us">
       <div class="container">
-        <div class="section__header">
+        <div class="section__header fade-in">
           <p class="section__eyebrow">Why Legacy Web Studio</p>
-          <h2 class="section__title">We Speak Your Clients' Language</h2>
-          <p class="section__desc">Every estate planning or probate enquiry begins with a search and a first impression. We make sure that impression is flawless.</p>
+          <h2 class="section__title">We Know Your Clients Before You Tell Us</h2>
+          <p class="section__desc">
+            Every estate planning enquiry starts with a search and a feeling. We make sure that feeling is warmth, trust, and confidence in your firm from the very first second.
+          </p>
         </div>
-        <div class="why-us__grid fade-up-stagger">
+
+        <div class="why-us__grid stagger-in">
           <div class="why-card">
-            <div class="why-card__icon">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 3L4 9v8c0 7.18 5.16 13.9 12 15.56C22.84 30.9 28 24.18 28 17V9L16 3z" stroke="#4A148C" stroke-width="1.8" stroke-linejoin="round"/><path d="M11 16l3 3 7-7" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="why-card__icon-wrap">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <path d="M13 2L2.5 7.5v7C2.5 20.58 7.28 26.08 13 27.5c5.72-1.42 10.5-6.92 10.5-13v-7L13 2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                <path d="M8.5 13l3 3 6-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
-            <h3 class="why-card__title">Sector-Specific Expertise</h3>
-            <p class="why-card__desc">We work exclusively within estate planning and probate law. We understand your practice areas, your clients' anxieties, and the language that builds trust.</p>
+            <div class="why-card__body">
+              <h3 class="why-card__title">Sector-Only Expertise</h3>
+              <p class="why-card__desc">We work exclusively with estate planning and probate firms. We understand the sensitive nature of the work and speak your clients' language fluently.</p>
+            </div>
           </div>
+
           <div class="why-card">
-            <div class="why-card__icon">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 16c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round"/><path d="M2 16h4M26 16h4M16 2v4M16 26v4" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="16" r="3" fill="#4A148C" opacity="0.3"/></svg>
+            <div class="why-card__icon-wrap">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <circle cx="13" cy="13" r="10" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M13 8v5l3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
             </div>
-            <h3 class="why-card__title">Conversion-First Design</h3>
-            <p class="why-card__desc">Beautiful design is meaningless without results. Every element — from layout to copy placement — is engineered to turn visitors into enquiries.</p>
+            <div class="why-card__body">
+              <h3 class="why-card__title">Fast, Reliable Delivery</h3>
+              <p class="why-card__desc">Your website delivered in weeks, not months. Clear milestones, transparent communication, and zero surprises from brief to launch.</p>
+            </div>
           </div>
+
           <div class="why-card">
-            <div class="why-card__icon">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="18" rx="2" stroke="#4A148C" stroke-width="1.8"/><path d="M4 13h24" stroke="#4A148C" stroke-width="1.8"/><path d="M16 6V4M10 6V4M22 6V4" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <div class="why-card__icon-wrap">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <rect x="2" y="5" width="22" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M2 10h22" stroke="currentColor" stroke-width="1.7"/>
+                <circle cx="7" cy="15" r="1.5" fill="currentColor"/>
+                <path d="M10.5 15h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
             </div>
-            <h3 class="why-card__title">Fast, Measurable Delivery</h3>
-            <p class="why-card__desc">We deliver complete, polished websites in weeks — not months. Clear milestones, zero surprises, and ongoing support after launch.</p>
+            <div class="why-card__body">
+              <h3 class="why-card__title">Conversion-First Design</h3>
+              <p class="why-card__desc">Beautiful design is nothing without results. Every layout decision is made to turn visitors into enquiries and enquiries into instructed clients.</p>
+            </div>
           </div>
+
           <div class="why-card">
-            <div class="why-card__icon">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M28 10l-12 12L10 16" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16c0-6.63 5.37-12 12-12 2.73 0 5.26.91 7.28 2.44" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <div class="why-card__icon-wrap">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <path d="M13 2C7.48 2 3 6.48 3 12c0 2.73.91 5.24 2.44 7.24" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                <path d="M23 12c0 5.52-4.48 10-10 10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                <path d="M7 12l4 4 8-8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
-            <h3 class="why-card__title">UK Legal Compliance</h3>
-            <p class="why-card__desc">Every site we build meets SRA guidelines and includes the essential legal disclosures, cookie policies, and accessibility standards.</p>
+            <div class="why-card__body">
+              <h3 class="why-card__title">SRA-Compliant Builds</h3>
+              <p class="why-card__desc">Every site includes proper legal disclosures, cookie consent, privacy policies, and accessibility standards — built in from day one, not bolted on.</p>
+            </div>
           </div>
+
           <div class="why-card">
-            <div class="why-card__icon">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="12" cy="10" r="5" stroke="#4A148C" stroke-width="1.8"/><path d="M4 26c0-4.42 3.58-8 8-8" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round"/><circle cx="22" cy="14" r="4" stroke="#4A148C" stroke-width="1.8"/><path d="M16 26c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <div class="why-card__icon-wrap">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <path d="M6 22V13M10 22V8M14 22V11M18 22V5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
             </div>
-            <h3 class="why-card__title">Client-Centred Copy</h3>
-            <p class="why-card__desc">We craft the words, not just the visuals. Empathetic, authoritative copy that speaks directly to people navigating probate for the first time.</p>
+            <div class="why-card__body">
+              <h3 class="why-card__title">Local SEO That Works</h3>
+              <p class="why-card__desc">We optimise your site so families searching for "estate planning solicitor near me" find your firm at the top — not your competitors.</p>
+            </div>
           </div>
+
           <div class="why-card">
-            <div class="why-card__icon">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M8 26V16M14 26V10M20 26V14M26 26V6" stroke="#4A148C" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <div class="why-card__icon-wrap">
+              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                <circle cx="10" cy="8.5" r="4" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M3 22c0-3.87 3.13-7 7-7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                <circle cx="18" cy="11" r="3.5" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M13 22c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
             </div>
-            <h3 class="why-card__title">Local SEO Dominance</h3>
-            <p class="why-card__desc">We optimise your site to rank for high-intent local searches — so when someone in your area needs an estate planning solicitor, they find you first.</p>
+            <div class="why-card__body">
+              <h3 class="why-card__title">Empathetic Copywriting</h3>
+              <p class="why-card__desc">We write the words too. Copy that acknowledges the emotional weight of estate planning, and gently guides families to pick up the phone.</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ===== SERVICES ===== -->
-    <section class="services section section--dark" id="services">
+    <section class="services section section--deep" id="services">
       <div class="container">
-        <div class="section__header section__header--light">
-          <p class="section__eyebrow section__eyebrow--light">What We Offer</p>
-          <h2 class="section__title section__title--light">End-to-End Web Presence, Built for Law Firms</h2>
-          <p class="section__desc section__desc--light">From strategy to launch and beyond, we handle every element of your digital presence.</p>
+        <div class="section__header section__header--light fade-in">
+          <p class="section__eyebrow section__eyebrow--warm">What We Build</p>
+          <h2 class="section__title section__title--light">Everything Your Firm Needs Online</h2>
+          <p class="section__desc section__desc--light">From a first-class website to ongoing growth — we handle every aspect of your digital presence.</p>
         </div>
-        <div class="services__grid fade-up-stagger">
-          <div class="service-card">
-            <span class="service-card__number">01</span>
-            <h3 class="service-card__title">Bespoke Website Design</h3>
-            <p class="service-card__desc">Custom-built, responsive websites designed from scratch. No page-builder templates — every pixel purposefully placed to reflect your firm's prestige.</p>
-            <ul class="service-card__list">
-              <li>Mobile-first responsive design</li>
-              <li>Brand identity integration</li>
-              <li>Accessibility (WCAG 2.1 AA)</li>
-              <li>Lightning fast load times</li>
-            </ul>
+
+        <div class="services__list stagger-in">
+
+          <div class="service-item">
+            <div class="service-item__left">
+              <span class="service-item__num">01</span>
+              <h3 class="service-item__title">Bespoke Website Design &amp; Build</h3>
+            </div>
+            <div class="service-item__right">
+              <p class="service-item__desc">Custom-built, responsive websites designed from the ground up. No page builders, no off-the-shelf templates — every detail crafted around your firm's identity and your clients' expectations.</p>
+              <ul class="service-item__tags">
+                <li>Mobile-first &amp; responsive</li>
+                <li>Lightning fast load times</li>
+                <li>Accessible (WCAG 2.1 AA)</li>
+                <li>Brand-aligned design</li>
+              </ul>
+            </div>
           </div>
-          <div class="service-card">
-            <span class="service-card__number">02</span>
-            <h3 class="service-card__title">Search Engine Optimisation</h3>
-            <p class="service-card__desc">Technical and local SEO that puts your firm at the top of Google for high-value terms like "estate planning solicitor [city]" and "probate lawyer near me".</p>
-            <ul class="service-card__list">
-              <li>Keyword research &amp; strategy</li>
-              <li>Google Business Profile setup</li>
-              <li>On-page SEO optimisation</li>
-              <li>Monthly performance reporting</li>
-            </ul>
+
+          <div class="service-item">
+            <div class="service-item__left">
+              <span class="service-item__num">02</span>
+              <h3 class="service-item__title">Search Engine Optimisation</h3>
+            </div>
+            <div class="service-item__right">
+              <p class="service-item__desc">Technical and local SEO that positions your firm at the top of Google for high-value searches like "estate planning solicitor [your town]" — where clients are actively looking.</p>
+              <ul class="service-item__tags">
+                <li>Local keyword strategy</li>
+                <li>Google Business Profile</li>
+                <li>Technical SEO audit</li>
+                <li>Monthly reporting</li>
+              </ul>
+            </div>
           </div>
-          <div class="service-card">
-            <span class="service-card__number">03</span>
-            <h3 class="service-card__title">Conversion Optimisation</h3>
-            <p class="service-card__desc">Turning website traffic into client enquiries. We design and test contact flows, landing pages, and calls-to-action that generate real business results.</p>
-            <ul class="service-card__list">
-              <li>Contact form UX design</li>
-              <li>A/B testing</li>
-              <li>Heatmap &amp; session analysis</li>
-              <li>Lead funnel mapping</li>
-            </ul>
+
+          <div class="service-item">
+            <div class="service-item__left">
+              <span class="service-item__num">03</span>
+              <h3 class="service-item__title">Copywriting &amp; Content</h3>
+            </div>
+            <div class="service-item__right">
+              <p class="service-item__desc">Authoritative, empathetic web copy written by specialists who understand the sensitivity of estate planning — and know exactly what clients need to read to feel at ease.</p>
+              <ul class="service-item__tags">
+                <li>Practice area pages</li>
+                <li>SEO blog articles</li>
+                <li>FAQ &amp; resource pages</li>
+                <li>SRA-compliant disclaimers</li>
+              </ul>
+            </div>
           </div>
-          <div class="service-card">
-            <span class="service-card__number">04</span>
-            <h3 class="service-card__title">Copywriting &amp; Content</h3>
-            <p class="service-card__desc">Authoritative, compliant web copy written by specialists who understand the sensitivity of estate planning and probate — and what clients need to hear.</p>
-            <ul class="service-card__list">
-              <li>Practice area page copy</li>
-              <li>SEO blog articles</li>
-              <li>FAQs &amp; resource pages</li>
-              <li>SRA-compliant disclaimers</li>
-            </ul>
+
+          <div class="service-item">
+            <div class="service-item__left">
+              <span class="service-item__num">04</span>
+              <h3 class="service-item__title">Website Rebrand &amp; Refresh</h3>
+            </div>
+            <div class="service-item__right">
+              <p class="service-item__desc">Already have a website that simply isn't working? We audit, redesign, and relaunch your existing site — improving performance, aesthetics, and conversions without losing your client base.</p>
+              <ul class="service-item__tags">
+                <li>Full site audit</li>
+                <li>UX / UI redesign</li>
+                <li>Content migration</li>
+                <li>Redirect mapping</li>
+              </ul>
+            </div>
           </div>
-          <div class="service-card">
-            <span class="service-card__number">05</span>
-            <h3 class="service-card__title">Website Rebrand &amp; Refresh</h3>
-            <p class="service-card__desc">Already have a website that simply isn't performing? We audit, redesign, and relaunch your existing site with a full strategy overhaul — no starting from zero required.</p>
-            <ul class="service-card__list">
-              <li>Comprehensive site audit</li>
-              <li>UX/UI redesign</li>
-              <li>Content migration</li>
-              <li>Redirect mapping</li>
-            </ul>
+
+          <div class="service-item">
+            <div class="service-item__left">
+              <span class="service-item__num">05</span>
+              <h3 class="service-item__title">Ongoing Support &amp; Maintenance</h3>
+            </div>
+            <div class="service-item__right">
+              <p class="service-item__desc">Your website is a living asset. Monthly retainers cover updates, security monitoring, hosting, and continuous improvement — so you can focus on your clients, not your tech stack.</p>
+              <ul class="service-item__tags">
+                <li>Monthly content updates</li>
+                <li>Security monitoring</li>
+                <li>Analytics reporting</li>
+                <li>Priority support SLA</li>
+              </ul>
+            </div>
           </div>
-          <div class="service-card">
-            <span class="service-card__number">06</span>
-            <h3 class="service-card__title">Ongoing Maintenance &amp; Support</h3>
-            <p class="service-card__desc">Your website is a living asset. We offer retainer packages for updates, security monitoring, hosting management, and continuous improvement.</p>
-            <ul class="service-card__list">
-              <li>Monthly content updates</li>
-              <li>Security &amp; uptime monitoring</li>
-              <li>Analytics reporting</li>
-              <li>Priority support SLA</li>
-            </ul>
-          </div>
+
         </div>
-        <div class="services__cta">
-          <a href="#contact" class="btn btn--primary">Discuss Your Project</a>
+
+        <div class="services__cta fade-in">
+          <p class="services__cta-text">Not sure which service you need?</p>
+          <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="btn btn--warm">
+            Let's Talk — Free Strategy Call
+          </a>
         </div>
       </div>
     </section>
@@ -199,85 +313,123 @@
     <!-- ===== PORTFOLIO ===== -->
     <section class="portfolio section" id="portfolio">
       <div class="container">
-        <div class="section__header">
+        <div class="section__header fade-in">
           <p class="section__eyebrow">Our Work</p>
-          <h2 class="section__title">Websites That Mean Business</h2>
-          <p class="section__desc">Each project is built with a singular goal: to help a law firm attract more of the right clients.</p>
+          <h2 class="section__title">A Portfolio Built on Trust</h2>
+          <p class="section__desc">
+            We are a growing boutique studio. Our case studies are shared on request to protect client confidentiality. The placeholders below represent our current project pipeline.
+          </p>
         </div>
-        <div class="portfolio__grid fade-up-stagger">
-          <div class="portfolio-card portfolio-card--featured">
-            <div class="portfolio-card__img portfolio-card__img--1">
-              <div class="portfolio-card__overlay">
-                <span class="portfolio-card__tag">Estate Planning</span>
-                <p class="portfolio-card__stat">+140% organic traffic in 3 months</p>
-              </div>
-            </div>
-            <div class="portfolio-card__body">
-              <h3 class="portfolio-card__title">Whitmore &amp; Partners Solicitors</h3>
-              <p class="portfolio-card__desc">Full website redesign and SEO strategy for a Yorkshire-based estate planning firm, resulting in a significant uplift in organic enquiries.</p>
-              <a href="#contact" class="portfolio-card__link">Request Case Study <span aria-hidden="true">→</span></a>
-            </div>
-          </div>
+
+        <div class="portfolio__grid stagger-in">
+
           <div class="portfolio-card">
-            <div class="portfolio-card__img portfolio-card__img--2">
-              <div class="portfolio-card__overlay">
-                <span class="portfolio-card__tag">Probate Law</span>
-                <p class="portfolio-card__stat">3× increase in contact form submissions</p>
+            <div class="portfolio-card__visual portfolio-card__visual--a">
+              <div class="portfolio-card__visual-inner">
+                <div class="pv-line pv-line--wide"></div>
+                <div class="pv-line pv-line--med"></div>
+                <div class="pv-bar-row">
+                  <div class="pv-bar"></div>
+                  <div class="pv-bar pv-bar--tall"></div>
+                  <div class="pv-bar pv-bar--mid"></div>
+                </div>
               </div>
+              <span class="portfolio-card__tag">Estate Planning</span>
             </div>
             <div class="portfolio-card__body">
-              <h3 class="portfolio-card__title">Halcyon Legal Group</h3>
-              <p class="portfolio-card__desc">Conversion-focused landing pages and a full rebrand for a probate-specialist practice in the South East.</p>
-              <a href="#contact" class="portfolio-card__link">Request Case Study <span aria-hidden="true">→</span></a>
+              <h3 class="portfolio-card__title">Full Website Build — In Progress</h3>
+              <p class="portfolio-card__desc">Bespoke site design, local SEO strategy, and conversion-optimised landing pages for a specialist estate planning firm.</p>
+              <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="portfolio-card__cta">
+                Request Case Study <span aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
+
           <div class="portfolio-card">
-            <div class="portfolio-card__img portfolio-card__img--3">
-              <div class="portfolio-card__overlay">
-                <span class="portfolio-card__tag">Wills &amp; Trusts</span>
-                <p class="portfolio-card__stat">Page 1 ranking for 12 local keywords</p>
+            <div class="portfolio-card__visual portfolio-card__visual--b">
+              <div class="portfolio-card__visual-inner">
+                <div class="pv-grid">
+                  <div class="pv-cell"></div><div class="pv-cell pv-cell--tall"></div>
+                  <div class="pv-cell pv-cell--mid"></div><div class="pv-cell"></div>
+                </div>
               </div>
+              <span class="portfolio-card__tag">Probate Law</span>
             </div>
             <div class="portfolio-card__body">
-              <h3 class="portfolio-card__title">Ashford Family Law</h3>
-              <p class="portfolio-card__desc">Bespoke site build and local SEO campaign for a wills and trusts specialist, dominating search results in their region.</p>
-              <a href="#contact" class="portfolio-card__link">Request Case Study <span aria-hidden="true">→</span></a>
+              <h3 class="portfolio-card__title">Rebrand &amp; Relaunch — Coming Soon</h3>
+              <p class="portfolio-card__desc">Complete rebrand and performance overhaul for an established probate practice looking to modernise its online presence.</p>
+              <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="portfolio-card__cta">
+                Request Case Study <span aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
+
+          <div class="portfolio-card">
+            <div class="portfolio-card__visual portfolio-card__visual--c">
+              <div class="portfolio-card__visual-inner">
+                <div class="pv-circle-row">
+                  <div class="pv-circle"></div>
+                  <div class="pv-circle pv-circle--lg"></div>
+                  <div class="pv-circle"></div>
+                </div>
+                <div class="pv-line pv-line--wide" style="margin-top:12px"></div>
+                <div class="pv-line pv-line--narrow"></div>
+              </div>
+              <span class="portfolio-card__tag">Wills &amp; Trusts</span>
+            </div>
+            <div class="portfolio-card__body">
+              <h3 class="portfolio-card__title">SEO Campaign — In Progress</h3>
+              <p class="portfolio-card__desc">Local SEO and content strategy for a wills and trusts solicitor aiming to reach top Google rankings in their region.</p>
+              <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="portfolio-card__cta">
+                Request Case Study <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
         </div>
-        <div class="portfolio__note">
-          <p>All case studies available on request. Client names may be altered for confidentiality.</p>
-        </div>
+
+        <p class="portfolio__note">
+          All case studies are shared under NDA. Interested in seeing relevant work to your firm's size and location? <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer">Book a call</a> and we'll walk you through it.
+        </p>
       </div>
     </section>
 
     <!-- ===== ABOUT ===== -->
-    <section class="about section section--accent" id="about">
+    <section class="about section section--warm-accent" id="about">
       <div class="container">
-        <div class="about__grid">
-          <div class="about__visual">
-            <div class="about__visual-inner">
-              <div class="about__stat-card">
-                <span class="about__stat-number">100%</span>
-                <span class="about__stat-label">Legal sector focused</span>
-              </div>
-              <div class="about__stat-card">
-                <span class="about__stat-number">UK</span>
-                <span class="about__stat-label">Based &amp; operated</span>
-              </div>
-              <div class="about__stat-card">
-                <span class="about__stat-number">Fast</span>
-                <span class="about__stat-label">Delivery, every time</span>
-              </div>
-            </div>
-          </div>
-          <div class="about__content">
+        <div class="about__inner">
+          <div class="about__content fade-in">
             <p class="section__eyebrow">About Us</p>
             <h2 class="section__title">Built for One Sector. Perfected for It.</h2>
-            <p class="about__text">Legacy Web Studio was founded with a single conviction: that estate planning and probate law firms deserve better digital representation than generic web agencies provide.</p>
-            <p class="about__text">Most law firms are handed off to a junior designer with a template and a brief. We do the opposite. We invest deeply in understanding your practice, your clients, and your local market — then build a website that reflects the authority and empathy your clients are looking for at one of the most difficult moments of their lives.</p>
-            <p class="about__text">We are a boutique UK agency. That means you deal directly with the people doing the work — no account managers, no offshore handoffs, no surprises.</p>
-            <a href="#contact" class="btn btn--primary">Work With Us</a>
+            <p class="about__text">
+              Legacy Web Studio was founded on one belief: estate planning and probate law firms deserve better digital representation than generic agencies provide.
+            </p>
+            <p class="about__text">
+              We work with solicitors who are trusted by families at the most vulnerable moments in their lives. That trust needs to show before a client ever picks up the phone — and it starts with your website.
+            </p>
+            <p class="about__text">
+              As a boutique UK studio, you deal directly with the people doing the work. No account managers, no offshore handoffs, no surprises. Just a thoughtful partnership between your expertise and ours.
+            </p>
+            <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="btn btn--warm">Start a Conversation</a>
+          </div>
+
+          <div class="about__stats fade-in">
+            <div class="about__stat">
+              <span class="about__stat-num">100%</span>
+              <span class="about__stat-label">Legal Sector Focused</span>
+            </div>
+            <div class="about__stat">
+              <span class="about__stat-num">UK</span>
+              <span class="about__stat-label">Based &amp; Operated</span>
+            </div>
+            <div class="about__stat">
+              <span class="about__stat-num">Bespoke</span>
+              <span class="about__stat-label">Every Single Time</span>
+            </div>
+            <div class="about__stat">
+              <span class="about__stat-num">Direct</span>
+              <span class="about__stat-label">Access to the Team</span>
+            </div>
           </div>
         </div>
       </div>
@@ -286,58 +438,81 @@
     <!-- ===== CONTACT ===== -->
     <section class="contact section" id="contact">
       <div class="container">
+
+        <!-- Calendly banner -->
+        <div class="contact__calendly-banner fade-in">
+          <div class="contact__calendly-text">
+            <h3 class="contact__calendly-heading">Prefer to talk it through?</h3>
+            <p class="contact__calendly-sub">Book a free, no-obligation 30-minute strategy call. We'll review your current presence and show you exactly how we'd improve it.</p>
+          </div>
+          <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="btn btn--warm btn--lg">
+            Book a Free Call on Calendly
+          </a>
+        </div>
+
+        <div class="contact__divider">
+          <span>or send a message below</span>
+        </div>
+
         <div class="contact__grid">
-          <div class="contact__info">
+          <div class="contact__info fade-in">
             <p class="section__eyebrow">Get in Touch</p>
-            <h2 class="section__title">Let's Build Something Exceptional</h2>
-            <p class="contact__desc">Book a free, no-obligation strategy call. We'll assess your current online presence and outline exactly how we'd improve it.</p>
-            <div class="contact__details">
+            <h2 class="section__title">Let's Build Something <em>Exceptional</em></h2>
+            <p class="contact__desc">
+              Tell us about your firm and what you're hoping to achieve online. We'll respond within one business day.
+            </p>
+            <div class="contact__detail-list">
               <div class="contact__detail">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2.5 6.667l7.5 5 7.5-5" stroke="#4A148C" stroke-width="1.5" stroke-linecap="round"/><rect x="1.667" y="3.333" width="16.667" height="13.333" rx="2" stroke="#4A148C" stroke-width="1.5"/></svg>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M2 5.5l7 4.667L16 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="1" y="3" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/></svg>
                 <a href="mailto:usman@legacywebstudio.co.uk">usman@legacywebstudio.co.uk</a>
               </div>
               <div class="contact__detail">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1.667A6.667 6.667 0 0110 15c-3.667 0-8.333 1.833-8.333 3.333" stroke="#4A148C" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="7.5" r="2.5" stroke="#4A148C" stroke-width="1.5"/></svg>
-                <span>legacywebstudio.co.uk</span>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M9 5v4l2.5 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                <span>Response within 1 business day</span>
               </div>
             </div>
-            <div class="contact__promise">
-              <p><strong>Our promise:</strong> We respond to every enquiry within one business day.</p>
-            </div>
           </div>
+
           <form class="contact__form" id="contact-form" novalidate>
-            <div class="form__group">
-              <label for="name" class="form__label">Full Name <span class="form__required">*</span></label>
-              <input type="text" id="name" name="name" class="form__input" placeholder="Jane Smith" required autocomplete="name" />
-              <span class="form__error" id="name-error"></span>
+            <div class="form__row">
+              <div class="form__group">
+                <label for="name" class="form__label">Full Name <span class="form__req" aria-hidden="true">*</span></label>
+                <input type="text" id="name" name="name" class="form__input" placeholder="Jane Smith" required autocomplete="name" />
+                <span class="form__error" id="name-error" role="alert"></span>
+              </div>
+              <div class="form__group">
+                <label for="firm" class="form__label">Firm Name <span class="form__req" aria-hidden="true">*</span></label>
+                <input type="text" id="firm" name="firm" class="form__input" placeholder="Smith Solicitors" required autocomplete="organization" />
+                <span class="form__error" id="firm-error" role="alert"></span>
+              </div>
+            </div>
+            <div class="form__row">
+              <div class="form__group">
+                <label for="email" class="form__label">Email Address <span class="form__req" aria-hidden="true">*</span></label>
+                <input type="email" id="email" name="email" class="form__input" placeholder="jane@yourfirm.co.uk" required autocomplete="email" />
+                <span class="form__error" id="email-error" role="alert"></span>
+              </div>
+              <div class="form__group">
+                <label for="phone" class="form__label">Phone <span class="form__optional">(optional)</span></label>
+                <input type="tel" id="phone" name="phone" class="form__input" placeholder="+44 7700 900000" autocomplete="tel" />
+              </div>
             </div>
             <div class="form__group">
-              <label for="firm" class="form__label">Firm Name <span class="form__required">*</span></label>
-              <input type="text" id="firm" name="firm" class="form__input" placeholder="Smith &amp; Associates Solicitors" required autocomplete="organization" />
-              <span class="form__error" id="firm-error"></span>
+              <label for="message" class="form__label">Tell us about your firm <span class="form__req" aria-hidden="true">*</span></label>
+              <textarea id="message" name="message" class="form__textarea" rows="4" placeholder="Briefly describe your firm, your current website situation, and what you're looking to achieve..." required></textarea>
+              <span class="form__error" id="message-error" role="alert"></span>
             </div>
-            <div class="form__group">
-              <label for="email" class="form__label">Email Address <span class="form__required">*</span></label>
-              <input type="email" id="email" name="email" class="form__input" placeholder="jane@yourfirm.co.uk" required autocomplete="email" />
-              <span class="form__error" id="email-error"></span>
-            </div>
-            <div class="form__group">
-              <label for="phone" class="form__label">Phone Number</label>
-              <input type="tel" id="phone" name="phone" class="form__input" placeholder="+44 7700 900000" autocomplete="tel" />
-            </div>
-            <div class="form__group">
-              <label for="message" class="form__label">Tell us about your firm <span class="form__required">*</span></label>
-              <textarea id="message" name="message" class="form__textarea" rows="4" placeholder="Briefly describe your firm, your current website situation, and what you're hoping to achieve..." required></textarea>
-              <span class="form__error" id="message-error"></span>
-            </div>
-            <button type="submit" class="btn btn--primary btn--full" id="submit-btn">
-              <span class="btn__text">Send Enquiry</span>
-              <span class="btn__loading" aria-hidden="true"></span>
+            <button type="submit" class="btn btn--warm btn--full" id="submit-btn">
+              <span class="btn__text">Send Message</span>
+              <span class="btn__spinner" aria-hidden="true"></span>
             </button>
-            <p class="form__privacy">By submitting this form you agree to our <a href="#">Privacy Policy</a>. We never share your data.</p>
+            <p class="form__privacy">
+              By submitting this form you agree to our <a href="privacy.html" target="_blank">Privacy Policy</a>. We never share your details.
+            </p>
             <div class="form__success" id="form-success" role="alert" aria-live="polite"></div>
           </form>
         </div>
+
       </div>
     </section>
 
@@ -348,12 +523,16 @@
     <div class="container">
       <div class="footer__grid">
         <div class="footer__brand">
-          <a href="#" class="nav__logo">Legacy<span>Web</span>Studio</a>
-          <p class="footer__tagline">Premium web design for estate planning and probate law firms across the UK.</p>
+          <div class="footer__logo-wrap">
+            <img src="assets/images/logos/logo-compressed.png" alt="Legacy Web Studio" class="footer__logo-img" />
+          </div>
+          <p class="footer__tagline">
+            Bespoke websites for estate planning and probate solicitors across the UK.
+          </p>
         </div>
-        <div class="footer__links">
+        <div class="footer__col">
           <h4 class="footer__heading">Navigate</h4>
-          <ul>
+          <ul class="footer__links">
             <li><a href="#why-us">Why Us</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
@@ -361,22 +540,23 @@
             <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
-        <div class="footer__links">
+        <div class="footer__col">
           <h4 class="footer__heading">Legal</h4>
-          <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Cookie Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
+          <ul class="footer__links">
+            <li><a href="privacy.html" target="_blank">Privacy Policy</a></li>
+            <li><a href="privacy.html#cookies" target="_blank">Cookie Policy</a></li>
+            <li><a href="privacy.html#terms" target="_blank">Terms of Service</a></li>
           </ul>
         </div>
-        <div class="footer__contact">
+        <div class="footer__col">
           <h4 class="footer__heading">Contact</h4>
-          <a href="mailto:usman@legacywebstudio.co.uk">usman@legacywebstudio.co.uk</a>
+          <a href="mailto:usman@legacywebstudio.co.uk" class="footer__email">usman@legacywebstudio.co.uk</a>
+          <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="footer__calendly">Book a Call →</a>
           <p class="footer__location">United Kingdom</p>
         </div>
       </div>
       <div class="footer__bottom">
-        <p>&copy; <span id="footer-year"></span> Legacy Web Studio. All rights reserved.</p>
+        <p class="footer__copy">&copy; <span id="footer-year"></span> Legacy Web Studio. All rights reserved.</p>
         <p class="footer__made">Designed &amp; built by Legacy Web Studio</p>
       </div>
     </div>
