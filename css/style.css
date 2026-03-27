@@ -239,32 +239,24 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   justify-content: space-between;
 }
 
-/* Logo pill: white backdrop over hero; disappears on scroll */
-.nav__logo-pill {
-  padding: 6px 14px;
-  border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.93);
-  box-shadow: 0 2px 14px rgba(0,0,0,0.14);
-  transition: background var(--t) var(--ease), box-shadow var(--t) var(--ease), padding var(--t) var(--ease);
-}
-
-.nav-header.scrolled .nav__logo-pill {
-  background: transparent;
-  box-shadow: none;
-  padding: 0 2px;
-}
-
-.nav__logo-img {
+/* Inline SVG logo — no container needed, colours switch via CSS */
+.nav__logo-svg {
   height: 36px;
   width: auto;
   display: block;
-  transition: mix-blend-mode var(--t);
 }
 
-/* On cream nav, multiply makes white logo bg transparent */
-.nav-header.scrolled .nav__logo-img {
-  mix-blend-mode: multiply;
+/* LEGACY: white over dark hero */
+.logo-legacy {
+  fill: #ffffff;
+  transition: fill var(--t) var(--ease);
 }
+
+/* Web Studio: brand purple — visible on both light and dark */
+.logo-sub { fill: #6A1EA8; }
+
+/* Cream nav: switch LEGACY to warm dark */
+.nav-header.scrolled .logo-legacy { fill: var(--text-dark); }
 
 /* Nav links */
 .nav__links {
@@ -1195,17 +1187,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
-.footer__logo-wrap {
-  display: inline-block;
-  background: rgba(255,255,255,0.92);
-  padding: 8px 16px;
-  border-radius: var(--r-md);
-  margin-bottom: 16px;
-}
-
-.footer__logo-img {
-  height: 40px;
+.footer__logo-svg {
+  height: 44px;
   width: auto;
+  display: block;
+  margin-bottom: 16px;
 }
 
 .footer__tagline {
@@ -1401,7 +1387,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .hero__actions,
   .btn,
   .nav__hamburger,
-  .footer__logo-wrap,
   .contact__calendly-banner,
   .contact__divider,
   .contact__form { display: none !important; }
@@ -1441,7 +1426,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .footer__links a,
   .footer__email,
   .footer__calendly { color: #333 !important; }
-  .footer__logo-wrap { background: transparent !important; padding: 0 !important; }
+  .footer__logo-svg .logo-legacy,
+  .footer__logo-svg text { fill: #111 !important; }
 
   a[href]:after { content: " (" attr(href) ")"; font-size: 9pt; color: #666; }
   a[href^="#"]:after,
