@@ -8,7 +8,7 @@
   <title>Privacy Policy | Legacy Web Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/privacy.css" />
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
@@ -25,10 +25,10 @@
         </svg>
       </a>
       <ul class="nav__links" id="nav-links">
-        <li><a href="index.html#why-us"    class="nav__link">Why Us</a></li>
-        <li><a href="index.html#services"  class="nav__link">Services</a></li>
-        <li><a href="index.html#portfolio" class="nav__link">Portfolio</a></li>
-        <li><a href="index.html#about"     class="nav__link">About</a></li>
+        <li><a href="index.html#why-us"    class="nav__link nav__link--pill">Why Us</a></li>
+        <li><a href="index.html#services"  class="nav__link nav__link--pill">Services</a></li>
+        <li><a href="index.html#portfolio" class="nav__link nav__link--pill">Portfolio</a></li>
+        <li><a href="index.html#about"     class="nav__link nav__link--pill">About</a></li>
         <li>
           <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="nav__link nav__link--cta">
             Book a Call
@@ -336,7 +336,7 @@
         </div>
       </div>
       <div class="footer__bottom">
-        <p class="footer__copy">&copy; <span class="footer-year"></span> Legacy Web Studio. All rights reserved.</p>
+        <p class="footer__copy">&copy; <span id="footer-year"></span> Legacy Web Studio. All rights reserved.</p>
         <p class="footer__made">Designed &amp; built by Legacy Web Studio</p>
       </div>
     </div>
@@ -353,7 +353,8 @@
       hbg.setAttribute('aria-expanded', String(o));
       document.body.style.overflow = o ? 'hidden' : '';
     });
-    document.querySelectorAll('.footer-year').forEach(el => el.textContent = new Date().getFullYear());
+    const yearEl = document.getElementById('footer-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
   </script>
 </body>
 </html>

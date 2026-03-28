@@ -139,17 +139,29 @@ const heroCanvas = document.getElementById('hero-canvas');
 const heroSection = document.getElementById('home');
 let sunset = null;
 
+// Defined at module level so the unified scroll handler below can call it
+const updateScroll = () => {
+  if (!sunset) return;
+  const heroH = heroSection.offsetHeight;
+  sunset.setScroll(window.scrollY / heroH);
+};
+
 if (heroCanvas && heroSection) {
   sunset = new SunsetCanvas(heroCanvas);
 
-  // Update scroll progress every frame via passive scroll listener
-  const updateScroll = () => {
-    if (!sunset) return;
-    const heroH = heroSection.offsetHeight;
-    sunset.setScroll(window.scrollY / heroH);
-  };
+  // J1: Pause canvas loop when hero scrolls out of view — saves battery on mobile
+  const heroObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      if (!sunset.running) {
+        sunset.running = true;
+        sunset._loop();
+      }
+    } else {
+      sunset.running = false;
+    }
+  });
+  heroObserver.observe(heroSection);
 
-  window.addEventListener('scroll', updateScroll, { passive: true });
   updateScroll();
 }
 
@@ -164,8 +176,26 @@ const setNavScrolled = () => {
   navHeader.classList.toggle('scrolled', window.scrollY > 50);
 };
 
-window.addEventListener('scroll', setNavScrolled, { passive: true });
+// J2: Single scroll handler — replaces two separate listeners
+const handleScroll = () => {
+  updateScroll();
+  setNavScrolled();
+};
+
+window.addEventListener('scroll', handleScroll, { passive: true });
 setNavScrolled();
+
+// J3: Outside-click listener — defined once, added only when menu opens,
+// removes itself on close to avoid firing on every page click
+const closeOnOutsideClick = (e) => {
+  if (!navHeader.contains(e.target)) {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    document.removeEventListener('click', closeOnOutsideClick);
+  }
+};
 
 // Hamburger toggle
 hamburger.addEventListener('click', () => {
@@ -173,6 +203,12 @@ hamburger.addEventListener('click', () => {
   navLinks.classList.toggle('open', open);
   hamburger.setAttribute('aria-expanded', String(open));
   document.body.style.overflow = open ? 'hidden' : '';
+  // Defer by one tick so this click doesn't immediately trigger closeOnOutsideClick
+  if (open) {
+    setTimeout(() => document.addEventListener('click', closeOnOutsideClick), 0);
+  } else {
+    document.removeEventListener('click', closeOnOutsideClick);
+  }
 });
 
 // Close on nav link click
@@ -182,10 +218,11 @@ navLinks.querySelectorAll('.nav__link').forEach(link => {
     navLinks.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    document.removeEventListener('click', closeOnOutsideClick);
   });
 });
 
-// Close on outside click
+/* DEPRECATED — see IMPROVEMENTS.md: replaced by dynamic closeOnOutsideClick above
 document.addEventListener('click', e => {
   if (!navHeader.contains(e.target)) {
     hamburger.classList.remove('open');
@@ -193,7 +230,7 @@ document.addEventListener('click', e => {
     hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   }
-});
+}); */
 
 /* =========================================================
    3. SCROLL-IN ANIMATIONS (IntersectionObserver)

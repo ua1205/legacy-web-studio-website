@@ -98,12 +98,16 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .section { padding: var(--py) 0; }
 
 .section--deep {
-  background: var(--sunset-deep);
+  /* Gradient: blends from why-us cream into dark deep */
+  background: linear-gradient(to bottom, var(--cream) 0px, var(--sunset-deep) 80px, var(--sunset-deep) 100%);
   color: var(--text-light);
 }
 
 .section--warm-accent {
-  background: linear-gradient(135deg, #FFF3E0 0%, #FEE8D6 50%, #FDD5B2 100%);
+  /* Top layer: fades from portfolio sand; bottom layer: warm accent gradient */
+  background:
+    linear-gradient(to bottom, var(--sand) 0px, transparent 80px),
+    linear-gradient(135deg, #FFF3E0 0%, #FEE8D6 50%, #FDD5B2 100%);
 }
 
 /* ---- SECTION HEADERS ---- */
@@ -222,7 +226,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   top: 0; left: 0; right: 0;
   z-index: 900;
   padding: 18px 0;
-  transition: padding var(--t) var(--ease), background var(--t) var(--ease), box-shadow var(--t) var(--ease);
+  transition: padding var(--t) var(--ease), background 0.4s var(--ease), box-shadow var(--t) var(--ease), color 0.4s var(--ease);
 }
 
 .nav-header.scrolled {
@@ -241,7 +245,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* Inline SVG logo — no container needed, colours switch via CSS */
 .nav__logo-svg {
-  height: 36px;
+  height: 44px;
   width: auto;
   display: block;
 }
@@ -276,7 +280,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   transition: color var(--t) var(--ease);
 }
 
-.nav__link:not(.nav__link--cta)::after {
+.nav__link:not(.nav__link--cta):not(.nav__link--pill)::after {
   content: '';
   position: absolute;
   bottom: -3px; left: 0;
@@ -286,11 +290,38 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .nav__link:not(.nav__link--cta):hover { color: #fff; }
-.nav__link:not(.nav__link--cta):hover::after { width: 100%; }
+.nav__link:not(.nav__link--cta):not(.nav__link--pill):hover::after { width: 100%; }
 
 .nav-header.scrolled .nav__link:not(.nav__link--cta) { color: var(--text-warm); }
 .nav-header.scrolled .nav__link:not(.nav__link--cta):hover { color: var(--text-dark); }
-.nav-header.scrolled .nav__link:not(.nav__link--cta)::after { background: var(--sunset-orange); }
+.nav-header.scrolled .nav__link:not(.nav__link--cta):not(.nav__link--pill)::after { background: var(--sunset-orange); }
+
+/* Section nav links — subtle translucent pill style */
+.nav__link--pill {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--r-full);
+  padding: 6px 14px;
+  transition: color var(--t) var(--ease), background var(--t) var(--ease), border-color var(--t) var(--ease);
+}
+
+.nav__link--pill:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.30);
+  color: #fff;
+}
+
+/* Pill on scrolled (light) nav */
+.nav-header.scrolled .nav__link--pill {
+  background: rgba(100, 40, 10, 0.06);
+  border-color: rgba(100, 40, 10, 0.14);
+}
+
+.nav-header.scrolled .nav__link--pill:hover {
+  background: rgba(100, 40, 10, 0.11);
+  border-color: rgba(100, 40, 10, 0.24);
+  color: var(--text-dark);
+}
 
 .nav__link--cta {
   background: var(--sunset-orange);
@@ -354,7 +385,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
   .nav__link { font-size: 1.25rem; color: rgba(255,255,255,0.9) !important; }
   .nav__link--cta { font-size: 1rem; }
-  .nav__link:not(.nav__link--cta)::after { background: var(--sunset-gold); }
+  .nav__link:not(.nav__link--cta):not(.nav__link--pill)::after { background: var(--sunset-gold); }
+
+  /* Reset pill styling inside full-screen mobile menu */
+  .nav__link--pill {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
 }
 
 /* ---- HERO ---- */
@@ -632,6 +671,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- WHY US ---- */
+/* Gradient: blends from hero dark into cream */
+.why-us {
+  background: linear-gradient(to bottom, var(--sunset-deep) 0px, var(--cream) 80px, var(--cream) 100%);
+}
+
 .why-us__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -775,7 +819,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- PORTFOLIO ---- */
-.portfolio { background: var(--sand); }
+/* Gradient: blends from services dark into sand */
+.portfolio { background: linear-gradient(to bottom, var(--sunset-deep) 0px, var(--sand) 80px, var(--sand) 100%); }
 
 .portfolio__grid {
   display: grid;
@@ -980,7 +1025,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- CONTACT ---- */
-.contact { background: var(--cream); }
+/* Gradient: blends from about's warm peach into cream */
+.contact { background: linear-gradient(to bottom, #FDD5B2 0px, var(--cream) 80px, var(--cream) 100%); }
 
 /* Calendly banner */
 .contact__calendly-banner {
@@ -1280,6 +1326,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .stagger-in.in-view > *:nth-child(4)  { opacity:1; transform:none; transition-delay:0.22s; }
 .stagger-in.in-view > *:nth-child(5)  { opacity:1; transform:none; transition-delay:0.28s; }
 .stagger-in.in-view > *:nth-child(6)  { opacity:1; transform:none; transition-delay:0.34s; }
+.stagger-in.in-view > *:nth-child(7)  { opacity:1; transform:none; transition-delay:0.40s; }
+.stagger-in.in-view > *:nth-child(8)  { opacity:1; transform:none; transition-delay:0.46s; }
 
 /* ---- ACCESSIBILITY ---- */
 :focus-visible {
@@ -1303,7 +1351,21 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     padding-bottom: 60px;
   }
 
-  .hero__mockup { display: none; }
+  /* DEPRECATED — see IMPROVEMENTS.md: was display: none */
+  /* .hero__mockup { display: none; } */
+
+  /* Retain mockup below hero text, scaled to fit single-column layout */
+  .hero__mockup {
+    display: block;
+    transform: scale(0.72);
+    transform-origin: top center;
+    animation: none;
+    margin: -20px auto 0;
+  }
+
+  .hero__mockup:hover {
+    transform: scale(0.72);
+  }
 
   .hero__text { max-width: 100%; text-align: left; }
 

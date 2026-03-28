@@ -12,7 +12,7 @@
   <title>Legacy Web Studio | Websites for Estate Planning &amp; Probate Solicitors</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
 </head>
@@ -28,10 +28,10 @@
         </svg>
       </a>
       <ul class="nav__links" id="nav-links">
-        <li><a href="#why-us"    class="nav__link">Why Us</a></li>
-        <li><a href="#services"  class="nav__link">Services</a></li>
-        <li><a href="#portfolio" class="nav__link">Portfolio</a></li>
-        <li><a href="#about"     class="nav__link">About</a></li>
+        <li><a href="#why-us"    class="nav__link nav__link--pill">Why Us</a></li>
+        <li><a href="#services"  class="nav__link nav__link--pill">Services</a></li>
+        <li><a href="#portfolio" class="nav__link nav__link--pill">Portfolio</a></li>
+        <li><a href="#about"     class="nav__link nav__link--pill">About</a></li>
         <li>
           <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="nav__link nav__link--cta">
             Book a Call
@@ -126,7 +126,7 @@
         <div class="why-us__grid stagger-in">
           <div class="why-card">
             <div class="why-card__icon-wrap">
-              <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+              <svg width="26" height="28" viewBox="0 0 26 28" fill="none" aria-hidden="true">
                 <path d="M13 2L2.5 7.5v7C2.5 20.58 7.28 26.08 13 27.5c5.72-1.42 10.5-6.92 10.5-13v-7L13 2z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
                 <path d="M8.5 13l3 3 6-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
@@ -478,19 +478,19 @@
             <div class="form__row">
               <div class="form__group">
                 <label for="name" class="form__label">Full Name <span class="form__req" aria-hidden="true">*</span></label>
-                <input type="text" id="name" name="name" class="form__input" placeholder="Jane Smith" required autocomplete="name" />
+                <input type="text" id="name" name="name" class="form__input" placeholder="Jane Smith" required aria-required="true" autocomplete="name" />
                 <span class="form__error" id="name-error" role="alert"></span>
               </div>
               <div class="form__group">
                 <label for="firm" class="form__label">Firm Name <span class="form__req" aria-hidden="true">*</span></label>
-                <input type="text" id="firm" name="firm" class="form__input" placeholder="Smith Solicitors" required autocomplete="organization" />
+                <input type="text" id="firm" name="firm" class="form__input" placeholder="Smith Solicitors" required aria-required="true" autocomplete="organization" />
                 <span class="form__error" id="firm-error" role="alert"></span>
               </div>
             </div>
             <div class="form__row">
               <div class="form__group">
                 <label for="email" class="form__label">Email Address <span class="form__req" aria-hidden="true">*</span></label>
-                <input type="email" id="email" name="email" class="form__input" placeholder="jane@yourfirm.co.uk" required autocomplete="email" />
+                <input type="email" id="email" name="email" class="form__input" placeholder="jane@yourfirm.co.uk" required aria-required="true" autocomplete="email" />
                 <span class="form__error" id="email-error" role="alert"></span>
               </div>
               <div class="form__group">
@@ -500,7 +500,7 @@
             </div>
             <div class="form__group">
               <label for="message" class="form__label">Tell us about your firm <span class="form__req" aria-hidden="true">*</span></label>
-              <textarea id="message" name="message" class="form__textarea" rows="4" placeholder="Briefly describe your firm, your current website situation, and what you're looking to achieve..." required></textarea>
+              <textarea id="message" name="message" class="form__textarea" rows="4" placeholder="Briefly describe your firm, your current website situation, and what you're looking to achieve..." required aria-required="true"></textarea>
               <span class="form__error" id="message-error" role="alert"></span>
             </div>
             <button type="submit" class="btn btn--warm btn--full" id="submit-btn">
