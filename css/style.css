@@ -46,7 +46,6 @@
   --r-sm:   6px;
   --r-md:   12px;
   --r-lg:   20px;
-  --r-xl:   32px;
   --r-full: 9999px;
 
   /* Shadows (warm-tinted) */
@@ -393,6 +392,22 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     border: none;
     border-radius: 0;
     padding: 0;
+  }
+
+  /* Restore hover underline for pill links on mobile (pill pseudo-element excluded at desktop) */
+  .nav__link.nav__link--pill::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--sunset-gold);
+    transition: width var(--t) var(--ease);
+  }
+
+  .nav__link.nav__link--pill:hover::after {
+    width: 100%;
   }
 }
 
@@ -1035,7 +1050,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   justify-content: space-between;
   gap: 32px;
   background: linear-gradient(135deg, var(--sunset-indigo) 0%, var(--sunset-purple) 50%, var(--sunset-coral) 100%);
-  border-radius: var(--r-xl);
+  border-radius: 32px;
   padding: 40px 48px;
   margin-bottom: 48px;
   box-shadow: var(--sh-purple);
@@ -1123,7 +1138,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .contact__form {
   background: #fff;
   border: 1px solid var(--border-warm);
-  border-radius: var(--r-xl);
+  border-radius: 32px;
   padding: 40px;
   box-shadow: var(--sh-lg);
 }
@@ -1220,7 +1235,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ---- FOOTER ---- */
 .footer {
-  background: #0F0805;
+  background: linear-gradient(to bottom, var(--cream) 0px, #0F0805 80px, #0F0805 100%);
   color: rgba(255,255,255,0.55);
   padding: 72px 0 0;
 }

@@ -343,16 +343,42 @@
   </footer>
 
   <script>
-    // Minimal JS for privacy page: nav hamburger + footer year
     const nav = document.getElementById('nav-header');
     const hbg = document.getElementById('hamburger');
     const nls = document.getElementById('nav-links');
+
+    const closeOnOutsideClick = (e) => {
+      if (!nav.contains(e.target)) {
+        hbg.classList.remove('open');
+        nls.classList.remove('open');
+        hbg.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        document.removeEventListener('click', closeOnOutsideClick);
+      }
+    };
+
     hbg.addEventListener('click', () => {
       const o = hbg.classList.toggle('open');
       nls.classList.toggle('open', o);
       hbg.setAttribute('aria-expanded', String(o));
       document.body.style.overflow = o ? 'hidden' : '';
+      if (o) {
+        setTimeout(() => document.addEventListener('click', closeOnOutsideClick), 0);
+      } else {
+        document.removeEventListener('click', closeOnOutsideClick);
+      }
     });
+
+    nls.querySelectorAll('.nav__link').forEach(link => {
+      link.addEventListener('click', () => {
+        hbg.classList.remove('open');
+        nls.classList.remove('open');
+        hbg.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        document.removeEventListener('click', closeOnOutsideClick);
+      });
+    });
+
     const yearEl = document.getElementById('footer-year');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
   </script>
