@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1E0A3C" />
   <meta name="description" content="Legacy Web Studio — Bespoke websites for estate planning and probate solicitors. Warm, professional, conversion-focused. Book a free strategy call." />
+  <link rel="canonical" href="https://legacywebstudio.co.uk/" />
   <meta name="keywords" content="web design estate planning solicitors, probate law firm websites, legal web design UK, estate planning website" />
   <meta property="og:title" content="Legacy Web Studio | Websites for Estate Planning & Probate Solicitors" />
   <meta property="og:description" content="Bespoke, high-converting websites for estate planning and probate law firms across the UK." />
@@ -12,11 +14,12 @@
   <title>Legacy Web Studio | Websites for Estate Planning &amp; Probate Solicitors</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ===== NAVIGATION ===== -->
   <header class="nav-header" id="nav-header">
@@ -44,7 +47,7 @@
     </nav>
   </header>
 
-  <main>
+  <main id="main-content">
 
     <!-- ===== HERO ===== -->
     <section class="hero" id="home">
@@ -478,19 +481,19 @@
             <div class="form__row">
               <div class="form__group">
                 <label for="name" class="form__label">Full Name <span class="form__req" aria-hidden="true">*</span></label>
-                <input type="text" id="name" name="name" class="form__input" placeholder="Jane Smith" required aria-required="true" autocomplete="name" />
+                <input type="text" id="name" name="name" class="form__input" placeholder="Jane Smith" required aria-required="true" aria-describedby="name-error" autocomplete="name" />
                 <span class="form__error" id="name-error" role="alert"></span>
               </div>
               <div class="form__group">
                 <label for="firm" class="form__label">Firm Name <span class="form__req" aria-hidden="true">*</span></label>
-                <input type="text" id="firm" name="firm" class="form__input" placeholder="Smith Solicitors" required aria-required="true" autocomplete="organization" />
+                <input type="text" id="firm" name="firm" class="form__input" placeholder="Smith Solicitors" required aria-required="true" aria-describedby="firm-error" autocomplete="organization" />
                 <span class="form__error" id="firm-error" role="alert"></span>
               </div>
             </div>
             <div class="form__row">
               <div class="form__group">
                 <label for="email" class="form__label">Email Address <span class="form__req" aria-hidden="true">*</span></label>
-                <input type="email" id="email" name="email" class="form__input" placeholder="jane@yourfirm.co.uk" required aria-required="true" autocomplete="email" />
+                <input type="email" id="email" name="email" class="form__input" placeholder="jane@yourfirm.co.uk" required aria-required="true" aria-describedby="email-error" autocomplete="email" />
                 <span class="form__error" id="email-error" role="alert"></span>
               </div>
               <div class="form__group">
@@ -500,7 +503,7 @@
             </div>
             <div class="form__group">
               <label for="message" class="form__label">Tell us about your firm <span class="form__req" aria-hidden="true">*</span></label>
-              <textarea id="message" name="message" class="form__textarea" rows="4" placeholder="Briefly describe your firm, your current website situation, and what you're looking to achieve..." required aria-required="true"></textarea>
+              <textarea id="message" name="message" class="form__textarea" rows="4" placeholder="Briefly describe your firm, your current website situation, and what you're looking to achieve..." required aria-required="true" aria-describedby="message-error"></textarea>
               <span class="form__error" id="message-error" role="alert"></span>
             </div>
             <button type="submit" class="btn btn--warm btn--full" id="submit-btn">
@@ -508,7 +511,7 @@
               <span class="btn__spinner" aria-hidden="true"></span>
             </button>
             <p class="form__privacy">
-              By submitting this form you agree to our <a href="privacy.html" target="_blank">Privacy Policy</a>. We never share your details.
+              By submitting this form you agree to our <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>. We never share your details.
             </p>
             <div class="form__success" id="form-success" role="alert" aria-live="polite"></div>
           </form>
@@ -546,9 +549,9 @@
         <div class="footer__col">
           <h4 class="footer__heading">Legal</h4>
           <ul class="footer__links">
-            <li><a href="privacy.html" target="_blank">Privacy Policy</a></li>
-            <li><a href="privacy.html#cookies" target="_blank">Cookie Policy</a></li>
-            <li><a href="privacy.html#terms" target="_blank">Terms of Service</a></li>
+            <li><a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a></li>
+            <li><a href="privacy.html#cookies" target="_blank" rel="noopener noreferrer">Cookie Policy</a></li>
+            <li><a href="privacy.html#terms" target="_blank" rel="noopener noreferrer">Terms of Service</a></li>
           </ul>
         </div>
         <div class="footer__col">

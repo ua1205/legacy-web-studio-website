@@ -1257,7 +1257,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .footer__tagline {
   font-size: 0.875rem;
-  color: rgba(255,255,255,0.38);
+  color: rgba(255,255,255,0.50);
   line-height: 1.72;
   max-width: 270px;
 }
@@ -1280,7 +1280,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .footer__links a {
   font-size: 0.875rem;
-  color: rgba(255,255,255,0.42);
+  color: rgba(255,255,255,0.55);
   transition: color var(--t) var(--ease);
 }
 
@@ -1302,7 +1302,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .footer__location {
   font-size: 0.8125rem;
-  color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.45);
   margin-top: 6px;
 }
 
@@ -1312,10 +1312,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   align-items: center;
   padding: 22px 0;
   font-size: 0.8rem;
-  color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.50);
 }
 
-.footer__made { color: rgba(255,255,255,0.15); }
+.footer__made { color: rgba(255,255,255,0.40); }
 
 /* ---- SCROLL ANIMATIONS ---- */
 .fade-in {
@@ -1345,6 +1345,26 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .stagger-in.in-view > *:nth-child(8)  { opacity:1; transform:none; transition-delay:0.46s; }
 
 /* ---- ACCESSIBILITY ---- */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 999;
+  padding: 12px 20px;
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--sunset-orange);
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: top var(--t) var(--ease);
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
 :focus-visible {
   outline: 2.5px solid var(--sunset-orange);
   outline-offset: 3px;
@@ -1376,6 +1396,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     transform-origin: top center;
     animation: none;
     margin: -20px auto 0;
+    margin-bottom: calc(-28%); /* Reclaim ~28% height lost to scale() DOM footprint */
   }
 
   .hero__mockup:hover {
@@ -1423,7 +1444,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
   .form__row { grid-template-columns: 1fr; }
 
-  .contact__form { padding: 24px 18px; }
+  .contact__form { padding: 24px 18px; border-radius: 20px; }
 
   .hero__actions { flex-direction: column; }
   .hero__actions .btn { width: 100%; justify-content: center; }

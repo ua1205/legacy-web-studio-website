@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FAF7F2" />
   <meta name="description" content="Legacy Web Studio Privacy Policy — How we collect, use, and protect your personal data in accordance with UK GDPR." />
   <meta name="robots" content="noindex" />
   <title>Privacy Policy | Legacy Web Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/privacy.css" />
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
 </head>
 <body class="privacy-body">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ===== NAV (shared) ===== -->
   <header class="nav-header scrolled" id="nav-header">
@@ -41,7 +43,7 @@
     </nav>
   </header>
 
-  <main class="privacy-main">
+  <main class="privacy-main" id="main-content">
     <div class="container">
 
       <div class="privacy-header">
@@ -377,6 +379,18 @@
         document.body.style.overflow = '';
         document.removeEventListener('click', closeOnOutsideClick);
       });
+    });
+
+    // Close mobile menu on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && hbg.classList.contains('open')) {
+        hbg.classList.remove('open');
+        nls.classList.remove('open');
+        hbg.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        document.removeEventListener('click', closeOnOutsideClick);
+        hbg.focus(); // Return focus to the trigger element
+      }
     });
 
     const yearEl = document.getElementById('footer-year');

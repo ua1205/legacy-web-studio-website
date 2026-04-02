@@ -33,7 +33,11 @@ class SunsetCanvas {
     ];
 
     this._resize();
-    window.addEventListener('resize', () => this._resize(), { passive: true });
+    this._resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(this._resizeTimer);
+      this._resizeTimer = setTimeout(() => this._resize(), 150);
+    }, { passive: true });
     this._loop();
   }
 
@@ -222,6 +226,18 @@ navLinks.querySelectorAll('.nav__link').forEach(link => {
   });
 });
 
+// Close mobile menu on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && hamburger.classList.contains('open')) {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    document.removeEventListener('click', closeOnOutsideClick);
+    hamburger.focus(); // Return focus to the trigger element
+  }
+});
+
 /* DEPRECATED — see IMPROVEMENTS.md: replaced by dynamic closeOnOutsideClick above
 document.addEventListener('click', e => {
   if (!navHeader.contains(e.target)) {
@@ -277,6 +293,7 @@ const validateField = key => {
   const f = fields[key];
   const ok = f.check(f.el.value);
   f.el.classList.toggle('error', !ok);
+  f.el.setAttribute('aria-invalid', String(!ok));
   f.err.textContent = ok ? '' : f.msg;
   return ok;
 };
@@ -328,6 +345,7 @@ if (form) {
       await new Promise(r => setTimeout(r, 1100));
 
       form.reset();
+      Object.values(fields).forEach(f => f.el.setAttribute('aria-invalid', 'false'));
       formSuccess.textContent = '✓  Thank you — we\'ve received your message and will be in touch within one business day.';
       formSuccess.style.cssText = '';
       formSuccess.classList.add('visible');
