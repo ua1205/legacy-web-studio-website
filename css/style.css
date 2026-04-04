@@ -376,7 +376,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
   .nav__links.open {
     opacity: 1;
-    pointer-events: all;
+    pointer-events: auto;
   }
 
   .nav__link { font-size: 1.25rem; color: rgba(255,255,255,0.9) !important; }
@@ -1388,9 +1388,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     padding-bottom: 60px;
   }
 
-  /* DEPRECATED — see IMPROVEMENTS.md: was display: none */
-  /* .hero__mockup { display: none; } */
-
   /* Retain mockup below hero text, scaled to fit single-column layout */
   .hero__mockup {
     display: block;
@@ -1539,6 +1536,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
   html { scroll-behavior: auto; }
   .hero__mockup { animation: none !important; }

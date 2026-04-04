@@ -155,7 +155,7 @@ let sunset = null;
 
 // Defined at module level so the unified scroll handler below can call it
 const updateScroll = () => {
-  if (!sunset) return;
+  if (!sunset || !heroSection) return;
   const heroH = heroSection.offsetHeight;
   sunset.setScroll(window.scrollY / heroH);
 };
@@ -166,7 +166,7 @@ if (heroCanvas && heroSection) {
   // J1: Pause canvas loop when hero scrolls out of view — saves battery on mobile
   const heroObserver = new IntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
-      if (!sunset.running) {
+      if (!sunset.running && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         sunset.running = true;
         sunset._loop();
       }
