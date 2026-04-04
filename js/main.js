@@ -336,28 +336,24 @@ if (form) {
     formSuccess.classList.remove('visible');
 
     try {
-      // ─────────────────────────────────────────────────────────
-      // TODO: Replace with your actual form endpoint.
-      // Recommended: Formspree (formspree.io) — free tier covers
-      // up to 50 submissions/month, no server needed.
-      //
-      // Example:
-      //   const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      //     body: JSON.stringify({
-      //       name:    fields.name.el.value.trim(),
-      //       firm:    fields.firm.el.value.trim(),
-      //       email:   fields.email.el.value.trim(),
-      //       phone:   document.getElementById('phone').value.trim(),
-      //       message: fields.message.el.value.trim(),
-      //     }),
-      //   });
-      //   if (!res.ok) throw new Error();
-      // ─────────────────────────────────────────────────────────
+      const res = await fetch('https://formspree.io/f/mqeggegw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name:    fields.name.el.value.trim(),
+          firm:    fields.firm.el.value.trim(),
+          email:   fields.email.el.value.trim(),
+          phone:   document.getElementById('phone').value.trim(),
+          message: fields.message.el.value.trim(),
+        }),
+      });
 
-      // Simulated delay (remove when using real endpoint)
-      await new Promise(r => setTimeout(r, 1100));
+      if (!res.ok) {
+        const data = await res.json();
+        if (res.status === 422) throw new Error('Validation error');
+        if (res.status === 429) throw new Error('Rate limited');
+        throw new Error(data.error || 'Submission failed');
+      }
 
       form.reset();
       Object.values(fields).forEach(f => f.el.setAttribute('aria-invalid', 'false'));
