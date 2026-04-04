@@ -10,7 +10,6 @@
   --sunset-indigo:  #2D1B69;
   --sunset-purple:  #4A148C;
   --sunset-grape:   #6A1EA8;
-  --sunset-warm-purple: #7B2FBE;
   --sunset-coral:   #C2410C;
   --sunset-orange:  #EA580C;
   --sunset-amber:   #D97706;
@@ -18,7 +17,6 @@
 
   /* Warm neutrals */
   --cream:         #FAF7F2;
-  --cream-deep:    #F5F0E8;
   --sand:          #FFF7ED;
   --peach:         #FEE8D6;
   --peach-deep:    #FDD5B2;
@@ -32,7 +30,6 @@
 
   /* Borders */
   --border-warm:   #E8D5C4;
-  --border-light:  rgba(255,255,255,0.12);
 
   /* State */
   --success: #15803D;
@@ -1196,6 +1193,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
 }
 
+.form__input:focus-visible,
+.form__textarea:focus-visible {
+  outline: none;
+}
+
 .form__textarea { resize: vertical; min-height: 108px; }
 
 .form__error {
@@ -1396,7 +1398,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     transform-origin: top center;
     animation: none;
     margin: -20px auto 0;
-    margin-bottom: calc(-28%); /* Reclaim ~28% height lost to scale() DOM footprint */
+    margin-bottom: -100px; /* Fixed compensation for scale(0.72) DOM footprint */
   }
 
   .hero__mockup:hover {

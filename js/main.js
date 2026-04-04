@@ -38,7 +38,14 @@ class SunsetCanvas {
       clearTimeout(this._resizeTimer);
       this._resizeTimer = setTimeout(() => this._resize(), 150);
     }, { passive: true });
-    this._loop();
+
+    // Respect reduced motion: paint once, skip animation loop
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this._draw();
+      this.running = false;
+    } else {
+      this._loop();
+    }
   }
 
   _resize() {
@@ -135,7 +142,10 @@ class SunsetCanvas {
     requestAnimationFrame(() => this._loop());
   }
 
-  destroy() { this.running = false; }
+  destroy() {
+    this.running = false;
+    clearTimeout(this._resizeTimer);
+  }
 }
 
 // Initialise canvas
@@ -177,6 +187,7 @@ const hamburger = document.getElementById('hamburger');
 const navLinks  = document.getElementById('nav-links');
 
 const setNavScrolled = () => {
+  if (!heroSection) return; // Don't toggle on pages without a hero
   navHeader.classList.toggle('scrolled', window.scrollY > 50);
 };
 
@@ -238,15 +249,16 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* DEPRECATED — see IMPROVEMENTS.md: replaced by dynamic closeOnOutsideClick above
-document.addEventListener('click', e => {
-  if (!navHeader.contains(e.target)) {
+// Clean up mobile menu state if viewport resizes past the breakpoint
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 860 && hamburger.classList.contains('open')) {
     hamburger.classList.remove('open');
     navLinks.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    document.removeEventListener('click', closeOnOutsideClick);
   }
-}); */
+}, { passive: true });
 
 /* =========================================================
    3. SCROLL-IN ANIMATIONS (IntersectionObserver)
@@ -282,30 +294,33 @@ const form      = document.getElementById('contact-form');
 const submitBtn = document.getElementById('submit-btn');
 const formSuccess = document.getElementById('form-success');
 
-const fields = {
-  name:    { el: document.getElementById('name'),    err: document.getElementById('name-error'),    check: v => v.trim().length >= 2,            msg: 'Please enter your full name.' },
-  firm:    { el: document.getElementById('firm'),    err: document.getElementById('firm-error'),    check: v => v.trim().length >= 2,            msg: 'Please enter your firm name.' },
-  email:   { el: document.getElementById('email'),  err: document.getElementById('email-error'),  check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()), msg: 'Please enter a valid email address.' },
-  message: { el: document.getElementById('message'), err: document.getElementById('message-error'), check: v => v.trim().length >= 20,           msg: 'Please add a little more detail (20+ characters).' },
-};
-
-const validateField = key => {
-  const f = fields[key];
-  const ok = f.check(f.el.value);
-  f.el.classList.toggle('error', !ok);
-  f.el.setAttribute('aria-invalid', String(!ok));
-  f.err.textContent = ok ? '' : f.msg;
-  return ok;
-};
-
-Object.keys(fields).forEach(k => {
-  fields[k].el.addEventListener('blur',  () => validateField(k));
-  fields[k].el.addEventListener('input', () => {
-    if (fields[k].el.classList.contains('error')) validateField(k);
-  });
-});
-
 if (form) {
+  const fields = {
+    name:    { el: document.getElementById('name'),    err: document.getElementById('name-error'),    check: v => v.trim().length >= 2,            msg: 'Please enter your full name.' },
+    firm:    { el: document.getElementById('firm'),    err: document.getElementById('firm-error'),    check: v => v.trim().length >= 2,            msg: 'Please enter your firm name.' },
+    email:   { el: document.getElementById('email'),   err: document.getElementById('email-error'),   check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()), msg: 'Please enter a valid email address.' },
+    message: { el: document.getElementById('message'), err: document.getElementById('message-error'), check: v => v.trim().length >= 20,           msg: 'Please add a little more detail (20+ characters).' },
+  };
+
+  const validateField = key => {
+    const f = fields[key];
+    const ok = f.check(f.el.value);
+    f.el.classList.toggle('error', !ok);
+    f.el.setAttribute('aria-invalid', String(!ok));
+    f.err.textContent = ok ? '' : f.msg;
+    return ok;
+  };
+
+  // Initialise aria-invalid on page load (WCAG best practice)
+  Object.values(fields).forEach(f => f.el.setAttribute('aria-invalid', 'false'));
+
+  Object.keys(fields).forEach(k => {
+    fields[k].el.addEventListener('blur',  () => validateField(k));
+    fields[k].el.addEventListener('input', () => {
+      if (fields[k].el.classList.contains('error')) validateField(k);
+    });
+  });
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
