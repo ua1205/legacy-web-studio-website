@@ -18,19 +18,59 @@ class SunsetCanvas {
     this.scroll  = 0;   // 0–1
     this.time    = 0;
     this.running = true;
+    this.isDark  = false;
     this.w = 0;
     this.h = 0;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    // Orbs: bx/by = base position (0–1), r = radius fraction,
-    // c0 = dawn colour, c1 = dusk colour, speed/phase = float params
+    // Orbs: spatial config only — colours sourced from active palette
     this.orbs = [
-      { bx:0.72, by:0.40, r:0.50, c0:[74,20,140],   c1:[212,70,10],   s:0.60, p:0.00 },
-      { bx:0.88, by:0.68, r:0.43, c0:[148,24,138],  c1:[238,130,6],   s:0.45, p:1.25 },
-      { bx:0.55, by:0.82, r:0.38, c0:[224,60,20],   c1:[245,155,6],   s:0.80, p:2.50 },
-      { bx:0.80, by:0.18, r:0.30, c0:[44,26,100],   c1:[168,22,148],  s:0.55, p:3.75 },
-      { bx:0.42, by:0.55, r:0.28, c0:[100,10,80],   c1:[195,80,10],   s:0.70, p:5.00 },
+      { bx:0.72, by:0.40, r:0.50, s:0.60, p:0.00 },
+      { bx:0.88, by:0.68, r:0.43, s:0.45, p:1.25 },
+      { bx:0.55, by:0.82, r:0.38, s:0.80, p:2.50 },
+      { bx:0.80, by:0.18, r:0.30, s:0.55, p:3.75 },
+      { bx:0.42, by:0.55, r:0.28, s:0.70, p:5.00 },
     ];
+
+    // Two palettes — light (warm sunrise) and dark (aurora night)
+    this.palettes = {
+      light: {
+        // bg stops: each pair interpolates dawn→dusk via scroll progress sp
+        bg: [
+          { c0:[28, 10,  70], c1:[12,   5, 30]  },
+          { c0:[74, 20, 140], c1:[100, 15,  5]  },
+          { c0:[155,27, 140], c1:[210, 75, 10]  },
+          { c0:[210,60,  30], c1:[240,140,  6]  },
+        ],
+        orbs: [
+          { c0:[74, 20,140],  c1:[212, 70, 10] },
+          { c0:[148,24,138],  c1:[238,130,  6] },
+          { c0:[224,60, 20],  c1:[245,155,  6] },
+          { c0:[44, 26,100],  c1:[168, 22,148] },
+          { c0:[100,10, 80],  c1:[195, 80, 10] },
+        ],
+        orbOpacity: 0.62,
+        horizon: { c0:[255,175, 90], c1:[255,200,50] },
+      },
+      dark: {
+        // bg stops: near-black → deep navy → dark teal-blue → faint aurora green
+        bg: [
+          { c0:[5,  8, 22],  c1:[8,  12, 30]  },
+          { c0:[11,21, 40],  c1:[15, 28, 52]  },
+          { c0:[12,35, 64],  c1:[14, 40, 72]  },
+          { c0:[10,46, 42],  c1:[12, 52, 48]  },
+        ],
+        orbs: [
+          { c0:[20, 80,120],  c1:[ 45,212,191] },  // teal
+          { c0:[60, 40,140],  c1:[139, 92,246] },  // violet
+          { c0:[10, 60, 80],  c1:[ 52,211,153] },  // green
+          { c0:[30, 20, 80],  c1:[167,139,250] },  // light violet
+          { c0:[15, 50, 70],  c1:[ 94,234,212] },  // bright teal
+        ],
+        orbOpacity: 0.45,
+        horizon: { c0:[100,220,200], c1:[100,220,200] },
+      },
+    };
 
     this._resize();
     this._resizeTimer = null;
@@ -60,6 +100,14 @@ class SunsetCanvas {
     this.scroll = Math.max(0, Math.min(1, p));
   }
 
+  setTheme(isDark) {
+    this.isDark = isDark;
+    // When motion is reduced the loop is stopped — repaint once with new palette
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this._draw();
+    }
+  }
+
   _lerp(a, b, t)  { return a + (b - a) * t; }
   _lc(c0, c1, t)  {
     return [
@@ -71,19 +119,17 @@ class SunsetCanvas {
 
   _draw() {
     const { ctx, w, h, time: t, scroll: sp, dpr } = this;
+    const pal = this.palettes[this.isDark ? 'dark' : 'light'];
 
     // Scale for DPR
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // ── Background gradient ──────────────────────────────
-    //   dawn (sp=0): deep indigo → purple → magenta
-    //   dusk (sp=1): dark navy  → coral  → amber
     const bg = ctx.createLinearGradient(0, 0, w * 0.4, h);
-
-    const s0 = this._lc([28, 10, 70],   [12,  5, 30],  sp);
-    const s1 = this._lc([74, 20, 140],  [100, 15,  5], sp);
-    const s2 = this._lc([155,27, 140],  [210, 75, 10], sp);
-    const s3 = this._lc([210,60,  30],  [240,140,  6], sp);
+    const s0 = this._lc(pal.bg[0].c0, pal.bg[0].c1, sp);
+    const s1 = this._lc(pal.bg[1].c0, pal.bg[1].c1, sp);
+    const s2 = this._lc(pal.bg[2].c0, pal.bg[2].c1, sp);
+    const s3 = this._lc(pal.bg[3].c0, pal.bg[3].c1, sp);
 
     bg.addColorStop(0,    `rgb(${s0})`);
     bg.addColorStop(0.30, `rgb(${s1})`);
@@ -97,6 +143,7 @@ class SunsetCanvas {
     ctx.globalCompositeOperation = 'screen';
 
     this.orbs.forEach((orb, i) => {
+      const orbCol = pal.orbs[i];
       const fx = Math.sin(t * orb.s       + orb.p) * 0.038;
       const fy = Math.cos(t * orb.s * 0.7 + orb.p) * 0.030;
 
@@ -108,10 +155,10 @@ class SunsetCanvas {
       const y = (orb.by + fy + sdy) * h;
       const r = orb.r * Math.min(w, h) * (1 + sp * 0.12);
 
-      const [cr, cg, cb] = this._lc(orb.c0, orb.c1, sp);
+      const [cr, cg, cb] = this._lc(orbCol.c0, orbCol.c1, sp);
 
       const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0,   `rgba(${cr},${cg},${cb},0.62)`);
+      g.addColorStop(0,   `rgba(${cr},${cg},${cb},${pal.orbOpacity})`);
       g.addColorStop(0.4, `rgba(${cr},${cg},${cb},0.22)`);
       g.addColorStop(1,   `rgba(${cr},${cg},${cb},0)`);
 
@@ -126,7 +173,7 @@ class SunsetCanvas {
     // ── Horizon glow ─────────────────────────────────────
     const hy = h * this._lerp(0.62, 0.48, sp);
     const hg = ctx.createLinearGradient(0, hy - h * 0.15, 0, hy + h * 0.18);
-    const [hr, hgr, hb] = this._lc([255,175,90], [255,200,50], sp);
+    const [hr, hgr, hb] = this._lc(pal.horizon.c0, pal.horizon.c1, sp);
     const ha = 0.10 + sp * 0.08;
     hg.addColorStop(0,   `rgba(${hr},${hgr},${hb},0)`);
     hg.addColorStop(0.5, `rgba(${hr},${hgr},${hb},${ha})`);
@@ -162,6 +209,7 @@ const updateScroll = () => {
 
 if (heroCanvas && heroSection) {
   sunset = new SunsetCanvas(heroCanvas);
+  sunset.setTheme(document.documentElement.classList.contains('dark'));
 
   // J1: Pause canvas loop when hero scrolls out of view — saves battery on mobile
   const heroObserver = new IntersectionObserver(([entry]) => {
@@ -380,3 +428,29 @@ if (form) {
    ========================================================= */
 const yearEl = document.getElementById('footer-year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+/* =========================================================
+   7. DARK MODE TOGGLE
+   ========================================================= */
+const themeToggle = document.getElementById('theme-toggle');
+
+if (themeToggle) {
+  // Sync toggle state with current class on <html>
+  themeToggle.checked = document.documentElement.classList.contains('dark');
+
+  themeToggle.addEventListener('change', () => {
+    const dark = themeToggle.checked;
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+    if (sunset) sunset.setTheme(dark);
+  });
+
+  // Listen for system preference changes (only when no stored preference)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      document.documentElement.classList.toggle('dark', e.matches);
+      themeToggle.checked = e.matches;
+      if (sunset) sunset.setTheme(e.matches);
+    }
+  });
+}
