@@ -94,8 +94,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .section { padding: var(--py) 0; }
 
 .section--deep {
-  /* Gradient: blends from why-us cream into dark deep */
-  background: linear-gradient(to bottom, var(--cream) 0px, var(--sunset-deep) 280px, var(--sunset-deep) 100%);
+  /* Gradient: cream → warm purple midpoint → deep (avoids muddy grey zone) */
+  background: linear-gradient(to bottom, var(--cream) 0px, #3D1A3A 120px, var(--sunset-deep) 320px, var(--sunset-deep) 100%);
   color: var(--text-light);
 }
 
@@ -595,7 +595,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: var(--sunset-deep); /* fallback if canvas fails */
+  background: #1E0A3C;
+  background: linear-gradient(to bottom, #1E0A3C 0%, #2A1225 100%); /* fallback if canvas fails */
 }
 
 #hero-canvas {
@@ -863,9 +864,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- WHY US ---- */
-/* Gradient: blends from hero dark into cream */
+/* Gradient: dark plum (matches hero warm bottom) → warm brown → cream */
 .why-us {
-  background: linear-gradient(to bottom, var(--sunset-deep) 0px, var(--cream) 200px, var(--cream) 100%);
+  background: linear-gradient(to bottom, #2A1225 0px, #5C2A1A 60px, var(--cream) 300px, var(--cream) 100%);
 }
 
 .why-us__grid {
@@ -1012,8 +1013,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- PORTFOLIO ---- */
-/* Gradient: blends from services dark into sand */
-.portfolio { background: linear-gradient(to bottom, var(--sunset-deep) 0px, var(--sand) 200px, var(--sand) 100%); }
+/* Gradient: deep → warm brown midpoint → sand (avoids muddy grey zone) */
+.portfolio { background: linear-gradient(to bottom, var(--sunset-deep) 0px, #3D2A1A 100px, var(--sand) 300px, var(--sand) 100%); }
 
 .portfolio__grid {
   display: grid;
@@ -1418,7 +1419,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ---- FOOTER ---- */
 .footer {
-  background: linear-gradient(to bottom, var(--cream) 0px, #0F0805 280px, #0F0805 100%);
+  background: linear-gradient(to bottom, var(--cream) 0px, #2A1A10 120px, #0F0805 300px, #0F0805 100%);
   color: rgba(255,255,255,0.55);
   padding: 72px 0 0;
 }
@@ -1869,6 +1870,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* Hero fallback — aurora dark sky (canvas covers this; shown only if canvas fails) */
 .dark .hero {
   background: #050816;
+  background: linear-gradient(to bottom, #050816 0%, #0B0D17 100%);
 }
 
 /* Section gradients — aurora colour journey, hardcoded so token overrides can't flatten them */
