@@ -57,6 +57,8 @@
   --t:         0.28s;
   --container: 1200px;
   --py:        96px;
+
+  color-scheme: light;
 }
 
 /* ---- RESET ---- */
@@ -94,16 +96,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .section { padding: var(--py) 0; }
 
 .section--deep {
-  /* Gradient: cream → warm purple midpoint → deep (avoids muddy grey zone) */
-  background: linear-gradient(to bottom, var(--cream) 0px, #3D1A3A 120px, var(--sunset-deep) 320px, var(--sunset-deep) 100%);
+  background: var(--sunset-deep);
   color: var(--text-light);
 }
 
 .section--warm-accent {
-  /* Top layer: fades from portfolio sand; bottom layer: warm accent gradient */
-  background:
-    linear-gradient(to bottom, var(--sand) 0px, transparent 200px),
-    linear-gradient(135deg, #FFF3E0 0%, #FEE8D6 50%, #FDD5B2 100%);
+  background: linear-gradient(135deg, #FFF3E0 0%, #FEE8D6 50%, #FDD5B2 100%);
 }
 
 /* ---- SECTION HEADERS ---- */
@@ -595,8 +593,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: #1E0A3C;
-  background: linear-gradient(to bottom, #1E0A3C 0%, #2A1225 100%); /* fallback if canvas fails */
+  background: var(--sunset-deep); /* fallback if canvas fails */
 }
 
 #hero-canvas {
@@ -864,9 +861,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- WHY US ---- */
-/* Gradient: dark plum (matches hero warm bottom) → warm brown → cream */
 .why-us {
-  background: linear-gradient(to bottom, #2A1225 0px, #5C2A1A 60px, var(--cream) 300px, var(--cream) 100%);
+  background: var(--cream);
 }
 
 .why-us__grid {
@@ -1013,8 +1009,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- PORTFOLIO ---- */
-/* Gradient: deep → warm brown midpoint → sand (avoids muddy grey zone) */
-.portfolio { background: linear-gradient(to bottom, var(--sunset-deep) 0px, #3D2A1A 100px, var(--sand) 300px, var(--sand) 100%); }
+.portfolio { background: var(--sand); }
 
 .portfolio__grid {
   display: grid;
@@ -1219,8 +1214,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- CONTACT ---- */
-/* Gradient: blends from about's warm peach into cream */
-.contact { background: linear-gradient(to bottom, #FDD5B2 0px, var(--cream) 200px, var(--cream) 100%); }
+.contact { background: var(--cream); }
 
 /* Calendly banner */
 .contact__calendly-banner {
@@ -1419,7 +1413,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ---- FOOTER ---- */
 .footer {
-  background: linear-gradient(to bottom, var(--cream) 0px, #2A1A10 120px, #0F0805 300px, #0F0805 100%);
+  background: #0F0805;
   color: rgba(255,255,255,0.55);
   padding: 72px 0 0;
 }
@@ -1684,6 +1678,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   /* State */
   --success: #34D399;
   --error:   #F87171;
+
+  color-scheme: dark;
 }
 
 /* Nav — dark mode */
@@ -1785,7 +1781,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* Footer — aurora palette */
 .dark .footer {
-  background: linear-gradient(to bottom, #0B0D17 0px, #050810 200px, #050810 100%);
+  background: #050810;
 }
 
 .dark .footer__logo-svg text:first-child {
@@ -1870,30 +1866,28 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* Hero fallback — aurora dark sky (canvas covers this; shown only if canvas fails) */
 .dark .hero {
   background: #050816;
-  background: linear-gradient(to bottom, #050816 0%, #0B0D17 100%);
 }
 
-/* Section gradients — aurora colour journey, hardcoded so token overrides can't flatten them */
-/* Continuity chain: #0B0D17 → #0D1B2A → #0A1628 → #121D2E → #0F1A2D → #0B0D17 → #050810 */
+/* Section flat backgrounds — each section has a distinct dark hue */
 .dark .why-us {
-  background: linear-gradient(to bottom, #0B0D17 0px, #0D1B2A 200px, #0D1B2A 100%);
+  background: #0D1B2A;
 }
 
 .dark .section--deep {
-  background: linear-gradient(to bottom, #0D1B2A 0px, #0A1628 200px, #0A1628 100%);
+  background: #0A1628;
   color: var(--text-light);
 }
 
 .dark .portfolio {
-  background: linear-gradient(to bottom, #0A1628 0px, #121D2E 200px, #121D2E 100%);
+  background: #121D2E;
 }
 
 .dark .section--warm-accent {
-  background: linear-gradient(to bottom, #121D2E 0px, #0F1A2D 200px, #0F1A2D 100%);
+  background: #0F1A2D;
 }
 
 .dark .contact {
-  background: linear-gradient(to bottom, #0F1A2D 0px, #0B0D17 200px, #0B0D17 100%);
+  background: #0B0D17;
 }
 
 /* Calendly banner — aurora version */
