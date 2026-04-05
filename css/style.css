@@ -1897,6 +1897,28 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 60px rgba(45, 212, 191, 0.04);
 }
 
+/* ---- AMBIENT BACKGROUND CANVAS ---- */
+#ambient-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ensure all sections sit above the ambient canvas */
+.hero,
+.why-us,
+.services,
+.portfolio,
+.about,
+.contact,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
 /* ---- PRINT ---- */
 @media print {
   * { animation: none !important; transition: none !important; }

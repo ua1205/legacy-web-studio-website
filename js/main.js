@@ -443,6 +443,7 @@ if (themeToggle) {
     document.documentElement.classList.toggle('dark', dark);
     localStorage.setItem('theme', dark ? 'dark' : 'light');
     if (sunset) sunset.setTheme(dark);
+    if (ambientBg) ambientBg.setTheme(dark);
   });
 
   // Listen for system preference changes (only when no stored preference)
@@ -451,6 +452,266 @@ if (themeToggle) {
       document.documentElement.classList.toggle('dark', e.matches);
       themeToggle.checked = e.matches;
       if (sunset) sunset.setTheme(e.matches);
+      if (ambientBg) ambientBg.setTheme(e.matches);
     }
   });
+}
+
+/* =========================================================
+   8. AMBIENT SECTION BACKGROUNDS
+   Light mode: drifting gradient orbs (2–4 % opacity)
+   Dark mode:  twinkling starfield + occasional shooting star
+   Only renders when an eligible section is in the viewport.
+   Skipped entirely when prefers-reduced-motion is set.
+   ========================================================= */
+let ambientBg = null;
+
+class AmbientBackground {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx    = canvas.getContext('2d');
+    this.running = false;
+    this.isDark  = document.documentElement.classList.contains('dark');
+    this.visibleSections = new Set();
+    this.time = 0;
+    this.dpr  = Math.min(window.devicePixelRatio || 1, 2);
+    this.w = 0;
+    this.h = 0;
+
+    // Light-mode orbs — viewport-relative base positions, normalised radius
+    // Colours match the warm/cream section palette at extreme low opacity
+    this.orbs = [
+      { bx: 0.22, by: 0.30, rs: 0.30, speed: 0.55, phase: 0.00, r: 234, g:  88, b:  12, a: 0.030 },
+      { bx: 0.72, by: 0.58, rs: 0.26, speed: 0.38, phase: 1.60, r: 245, g: 158, b:  11, a: 0.025 },
+      { bx: 0.48, by: 0.78, rs: 0.28, speed: 0.65, phase: 3.20, r:  74, g:  20, b: 140, a: 0.020 },
+      { bx: 0.82, by: 0.22, rs: 0.24, speed: 0.48, phase: 4.80, r: 253, g: 213, b: 178, a: 0.040 },
+      { bx: 0.14, by: 0.68, rs: 0.27, speed: 0.58, phase: 6.00, r: 194, g:  65, b:  12, a: 0.020 },
+    ];
+
+    // Dark-mode stars — generated once, survive resize (normalised positions)
+    this.stars = [];
+    this._generateStars(70);
+
+    // Shooting star state
+    this.shootingStar  = null;
+    this.nextShootingStarAt = this._randomShootingDelay(); // time-unit target
+
+    this._setupObserver();
+
+    this._resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(this._resizeTimer);
+      this._resizeTimer = setTimeout(() => this._resize(), 150);
+    }, { passive: true });
+
+    this._resize();
+  }
+
+  // ── Stars ────────────────────────────────────────────────
+  _generateStars(count) {
+    this.stars = [];
+    for (let i = 0; i < count; i++) {
+      // Angular speed calculated from a 3-8 s period at 60 fps × 0.004 time-units/frame
+      const period = (3 + Math.random() * 5) * 60 * 0.004;
+      this.stars.push({
+        nx:     Math.random(),                      // normalised x 0–1
+        ny:     Math.random(),                      // normalised y 0–1
+        radius: 0.5 + Math.random() * 1.5,          // 0.5–2 px
+        phase:  Math.random() * Math.PI * 2,
+        speed:  (2 * Math.PI) / period,             // rad per time-unit
+      });
+    }
+  }
+
+  // ── Public API ───────────────────────────────────────────
+  setTheme(isDark) {
+    this.isDark = isDark;
+    if (!isDark) this.shootingStar = null; // cancel active shooting star on switch to light
+  }
+
+  // ── IntersectionObserver ─────────────────────────────────
+  _setupObserver() {
+    const sections = document.querySelectorAll(
+      '.why-us, .portfolio, .section--warm-accent, .contact'
+    );
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.visibleSections.add(entry.target);
+        } else {
+          this.visibleSections.delete(entry.target);
+        }
+      });
+      const shouldRun = this.visibleSections.size > 0;
+      if (shouldRun && !this.running) {
+        this.running = true;
+        this._loop();
+      } else if (!shouldRun) {
+        this.running = false;
+      }
+    }, { threshold: 0 });
+
+    sections.forEach(s => observer.observe(s));
+  }
+
+  // Returns [{top, bottom}] in CSS-pixel viewport coords for visible eligible sections
+  _getVisibleBands() {
+    const bands = [];
+    this.visibleSections.forEach(section => {
+      const rect   = section.getBoundingClientRect();
+      const top    = Math.max(0, rect.top);
+      const bottom = Math.min(this.h, rect.bottom);
+      if (bottom > top) bands.push({ top, bottom });
+    });
+    return bands;
+  }
+
+  // ── Resize ───────────────────────────────────────────────
+  _resize() {
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.w   = this.canvas.offsetWidth;
+    this.h   = this.canvas.offsetHeight;
+    this.canvas.width  = this.w * this.dpr;
+    this.canvas.height = this.h * this.dpr;
+  }
+
+  // ── Animation loop ───────────────────────────────────────
+  _loop() {
+    if (!this.running) return;
+    this.time += 0.004;
+    this._draw();
+    requestAnimationFrame(() => this._loop());
+  }
+
+  _draw() {
+    const { ctx, w, h, dpr, time: t } = this;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const bands = this._getVisibleBands();
+    if (bands.length === 0) return;
+
+    // Clip to the vertical bands of visible eligible sections
+    ctx.save();
+    ctx.beginPath();
+    bands.forEach(({ top, bottom }) => ctx.rect(0, top, w, bottom - top));
+    ctx.clip();
+
+    if (this.isDark) {
+      // Spawn shooting star when the timer expires
+      if (!this.shootingStar && t >= this.nextShootingStarAt) {
+        this._spawnShootingStar();
+        this.nextShootingStarAt = t + this._randomShootingDelay();
+      }
+      this._drawDarkStars();
+      this._drawShootingStar();
+    } else {
+      this._drawLightOrbs();
+    }
+
+    ctx.restore();
+  }
+
+  // ── Light mode — drifting gradient orbs ──────────────────
+  _drawLightOrbs() {
+    const { ctx, w, h, time: t } = this;
+    const base = Math.min(w, h);
+
+    this.orbs.forEach(orb => {
+      // Drift on independent sine/cosine paths — max ±5 % of viewport width
+      const fx = Math.sin(t * orb.speed       + orb.phase) * 0.05;
+      const fy = Math.cos(t * orb.speed * 0.7 + orb.phase) * 0.04;
+
+      const x = (orb.bx + fx) * w;
+      const y = (orb.by + fy) * h;
+      const r = orb.rs * base;
+
+      // Large radial gradient — hard centre fading to transparent at 70 %
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0,   `rgba(${orb.r},${orb.g},${orb.b},${orb.a})`);
+      g.addColorStop(0.7, `rgba(${orb.r},${orb.g},${orb.b},0)`);
+      g.addColorStop(1,   `rgba(${orb.r},${orb.g},${orb.b},0)`);
+
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  // ── Dark mode — twinkling starfield ──────────────────────
+  _drawDarkStars() {
+    const { ctx, w, h, time: t } = this;
+
+    this.stars.forEach(star => {
+      const x = star.nx * w;
+      const y = star.ny * h;
+      // Opacity oscillates between 0.15 and 0.60 on a sine wave
+      const opacity = 0.375 + 0.225 * Math.sin(t * star.speed + star.phase);
+
+      ctx.beginPath();
+      ctx.arc(x, y, star.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${opacity.toFixed(3)})`;
+      ctx.fill();
+    });
+  }
+
+  // ── Dark mode — shooting star ────────────────────────────
+  _randomShootingDelay() {
+    // 8–15 s × 60 fps × 0.004 time-units/frame = 1.92–3.60 time-units
+    return (8 + Math.random() * 7) * 60 * 0.004;
+  }
+
+  _spawnShootingStar() {
+    const angleDeg = 30 + Math.random() * 15;          // 30–45 °
+    const angle    = angleDeg * Math.PI / 180;
+    const speed    = this.w * 0.010;                   // crosses ~40 % of width in ~0.8 s
+    this.shootingStar = {
+      x:  this.w * (0.4 + Math.random() * 0.6),        // start right 60 %
+      y:  this.h * Math.random() * 0.3,                 // start top 30 %
+      vx: -Math.cos(angle) * speed,                     // always left
+      vy:  Math.sin(angle) * speed,                     // always down
+    };
+  }
+
+  _drawShootingStar() {
+    const ss = this.shootingStar;
+    if (!ss) return;
+
+    // Advance position by one frame
+    ss.x += ss.vx;
+    ss.y += ss.vy;
+
+    // Remove when fully off canvas
+    if (ss.x < -100 || ss.y > this.h + 100) {
+      this.shootingStar = null;
+      return;
+    }
+
+    // Tail: 80 px behind the head, fading to transparent
+    const mag = Math.hypot(ss.vx, ss.vy);
+    const tailLength = 80;
+    const tx = ss.x - (ss.vx / mag) * tailLength;
+    const ty = ss.y - (ss.vy / mag) * tailLength;
+
+    const grad = this.ctx.createLinearGradient(tx, ty, ss.x, ss.y);
+    grad.addColorStop(0, 'rgba(94,234,212,0)');          // tail tip — transparent
+    grad.addColorStop(1, 'rgba(94,234,212,0.7)');        // head — teal
+
+    this.ctx.save();
+    this.ctx.beginPath();
+    this.ctx.moveTo(tx, ty);
+    this.ctx.lineTo(ss.x, ss.y);
+    this.ctx.strokeStyle = grad;
+    this.ctx.lineWidth   = 1.5;
+    this.ctx.lineCap     = 'round';
+    this.ctx.stroke();
+    this.ctx.restore();
+  }
+}
+
+// Instantiate — skip entirely when reduced motion is active
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const ambientCanvas = document.getElementById('ambient-canvas');
+  if (ambientCanvas) ambientBg = new AmbientBackground(ambientCanvas);
 }
