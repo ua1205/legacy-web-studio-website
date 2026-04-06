@@ -459,8 +459,8 @@ if (themeToggle) {
 
 /* =========================================================
    8. AMBIENT SECTION BACKGROUNDS
-   Light mode: drifting gradient orbs (2–4 % opacity)
-   Dark mode:  twinkling starfield + occasional shooting star
+   Dark mode only: twinkling starfield + occasional shooting star
+   In light mode canvases are present but nothing is drawn.
    Each eligible section has its own canvas as first child.
    Skipped entirely when prefers-reduced-motion is set.
    ========================================================= */
@@ -477,18 +477,15 @@ class AmbientBackground {
     this.sections = [];
     document.querySelectorAll('.ambient-section-canvas').forEach((canvas, i) => {
       const section = canvas.parentElement;
-      const starsOnly = section.classList.contains('hero') || section.classList.contains('services');
       this.sections.push({
         canvas,
         ctx: canvas.getContext('2d'),
         section,
         visible: false,
         index: i,
-        starsOnly,
         w: 0,
         h: 0,
         stars: this._generateStarsForSection(30 + Math.floor(Math.random() * 6)),
-        orbs:  starsOnly ? [] : this._generateOrbsForSection(i),
       });
     });
 
@@ -520,38 +517,6 @@ class AmbientBackground {
       });
     }
     return stars;
-  }
-
-  // ── Orb generation (per section) ─────────────────────────
-  _generateOrbsForSection(index) {
-    const configs = [
-      // Section 0 (hero): starsOnly — not used
-      [],
-      // Section 1 (why-us): 2 orbs
-      [
-        { bx: 0.25, by: 0.35, rs: 0.36, speed: 0.50, phase: 0.0, r: 234, g:  88, b:  12, a: 0.075 },
-        { bx: 0.75, by: 0.65, rs: 0.31, speed: 0.40, phase: 2.0, r: 245, g: 158, b:  11, a: 0.065 },
-      ],
-      // Section 2 (services): starsOnly — not used
-      [],
-      // Section 3 (portfolio): 2 orbs
-      [
-        { bx: 0.65, by: 0.30, rs: 0.34, speed: 0.45, phase: 1.2, r:  74, g:  20, b: 140, a: 0.055 },
-        { bx: 0.30, by: 0.70, rs: 0.32, speed: 0.55, phase: 3.5, r: 253, g: 213, b: 178, a: 0.085 },
-      ],
-      // Section 4 (about): 3 orbs
-      [
-        { bx: 0.20, by: 0.40, rs: 0.30, speed: 0.48, phase: 0.8, r: 194, g:  65, b:  12, a: 0.055 },
-        { bx: 0.70, by: 0.25, rs: 0.28, speed: 0.60, phase: 4.0, r: 234, g:  88, b:  12, a: 0.065 },
-        { bx: 0.50, by: 0.75, rs: 0.32, speed: 0.35, phase: 5.5, r: 245, g: 158, b:  11, a: 0.075 },
-      ],
-      // Section 5 (contact): 2 orbs
-      [
-        { bx: 0.80, by: 0.45, rs: 0.34, speed: 0.42, phase: 2.5, r:  74, g:  20, b: 140, a: 0.055 },
-        { bx: 0.15, by: 0.60, rs: 0.30, speed: 0.52, phase: 4.8, r: 253, g: 213, b: 178, a: 0.085 },
-      ],
-    ];
-    return configs[index] || configs[1];
   }
 
   // ── Public API ───────────────────────────────────────────
@@ -624,35 +589,7 @@ class AmbientBackground {
       if (this.isDark) {
         this._drawDarkStars(sec);
         if (sec === shootingTarget) this._drawShootingStar(sec);
-      } else if (!sec.starsOnly) {
-        this._drawLightOrbs(sec);
       }
-    });
-  }
-
-  // ── Light mode — drifting gradient orbs ──────────────────
-  _drawLightOrbs(sec) {
-    const { ctx, w, h } = sec;
-    const t    = this.time;
-    const base = Math.min(w, h);
-
-    sec.orbs.forEach(orb => {
-      const fx = Math.sin(t * orb.speed       + orb.phase) * 0.05;
-      const fy = Math.cos(t * orb.speed * 0.7 + orb.phase) * 0.04;
-
-      const x = (orb.bx + fx) * w;
-      const y = (orb.by + fy) * h;
-      const r = orb.rs * base;
-
-      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-      g.addColorStop(0,   `rgba(${orb.r},${orb.g},${orb.b},${orb.a})`);
-      g.addColorStop(0.7, `rgba(${orb.r},${orb.g},${orb.b},0)`);
-      g.addColorStop(1,   `rgba(${orb.r},${orb.g},${orb.b},0)`);
-
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
     });
   }
 
