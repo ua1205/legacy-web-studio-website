@@ -461,66 +461,97 @@ if (themeToggle) {
    8. AMBIENT SECTION BACKGROUNDS
    Light mode: drifting gradient orbs (2–4 % opacity)
    Dark mode:  twinkling starfield + occasional shooting star
-   Only renders when an eligible section is in the viewport.
+   Each eligible section has its own canvas as first child.
    Skipped entirely when prefers-reduced-motion is set.
    ========================================================= */
 let ambientBg = null;
 
 class AmbientBackground {
-  constructor(canvas) {
-    this.canvas = canvas;
-    this.ctx    = canvas.getContext('2d');
-    this.running = false;
+  constructor() {
     this.isDark  = document.documentElement.classList.contains('dark');
-    this.visibleSections = new Set();
-    this.time = 0;
-    this.dpr  = Math.min(window.devicePixelRatio || 1, 2);
-    this.w = 0;
-    this.h = 0;
+    this.time    = 0;
+    this.running = false;
+    this.dpr     = Math.min(window.devicePixelRatio || 1, 2);
 
-    // Light-mode orbs — viewport-relative base positions, normalised radius
-    // Colours match the warm/cream section palette at extreme low opacity
-    this.orbs = [
-      { bx: 0.22, by: 0.30, rs: 0.30, speed: 0.55, phase: 0.00, r: 234, g:  88, b:  12, a: 0.030 },
-      { bx: 0.72, by: 0.58, rs: 0.26, speed: 0.38, phase: 1.60, r: 245, g: 158, b:  11, a: 0.025 },
-      { bx: 0.48, by: 0.78, rs: 0.28, speed: 0.65, phase: 3.20, r:  74, g:  20, b: 140, a: 0.020 },
-      { bx: 0.82, by: 0.22, rs: 0.24, speed: 0.48, phase: 4.80, r: 253, g: 213, b: 178, a: 0.040 },
-      { bx: 0.14, by: 0.68, rs: 0.27, speed: 0.58, phase: 6.00, r: 194, g:  65, b:  12, a: 0.020 },
-    ];
+    // Collect all section canvases
+    this.sections = [];
+    document.querySelectorAll('.ambient-section-canvas').forEach((canvas, i) => {
+      const section = canvas.parentElement;
+      const starsOnly = section.classList.contains('hero') || section.classList.contains('services');
+      this.sections.push({
+        canvas,
+        ctx: canvas.getContext('2d'),
+        section,
+        visible: false,
+        index: i,
+        starsOnly,
+        w: 0,
+        h: 0,
+        stars: this._generateStarsForSection(30 + Math.floor(Math.random() * 6)),
+        orbs:  starsOnly ? [] : this._generateOrbsForSection(i),
+      });
+    });
 
-    // Dark-mode stars — generated once, survive resize (normalised positions)
-    this.stars = [];
-    this._generateStars(70);
-
-    // Shooting star state
-    this.shootingStar  = null;
-    this.nextShootingStarAt = this._randomShootingDelay(); // time-unit target
+    // Shooting star state — rendered on first visible section only
+    this.shootingStar       = null;
+    this.nextShootingStarAt = this._randomShootingDelay();
 
     this._setupObserver();
+    this._resize();
 
     this._resizeTimer = null;
     window.addEventListener('resize', () => {
       clearTimeout(this._resizeTimer);
       this._resizeTimer = setTimeout(() => this._resize(), 150);
     }, { passive: true });
-
-    this._resize();
   }
 
-  // ── Stars ────────────────────────────────────────────────
-  _generateStars(count) {
-    this.stars = [];
+  // ── Star generation (per section) ────────────────────────
+  _generateStarsForSection(count) {
+    const stars = [];
     for (let i = 0; i < count; i++) {
-      // Angular speed calculated from a 3-8 s period at 60 fps × 0.004 time-units/frame
       const period = (3 + Math.random() * 5) * 60 * 0.004;
-      this.stars.push({
-        nx:     Math.random(),                      // normalised x 0–1
-        ny:     Math.random(),                      // normalised y 0–1
-        radius: 0.5 + Math.random() * 1.5,          // 0.5–2 px
+      stars.push({
+        nx:     Math.random(),
+        ny:     Math.random(),
+        radius: 0.5 + Math.random() * 1.5,
         phase:  Math.random() * Math.PI * 2,
-        speed:  (2 * Math.PI) / period,             // rad per time-unit
+        speed:  (2 * Math.PI) / period,
       });
     }
+    return stars;
+  }
+
+  // ── Orb generation (per section) ─────────────────────────
+  _generateOrbsForSection(index) {
+    const configs = [
+      // Section 0 (hero): starsOnly — not used
+      [],
+      // Section 1 (why-us): 2 orbs
+      [
+        { bx: 0.25, by: 0.35, rs: 0.36, speed: 0.50, phase: 0.0, r: 234, g:  88, b:  12, a: 0.075 },
+        { bx: 0.75, by: 0.65, rs: 0.31, speed: 0.40, phase: 2.0, r: 245, g: 158, b:  11, a: 0.065 },
+      ],
+      // Section 2 (services): starsOnly — not used
+      [],
+      // Section 3 (portfolio): 2 orbs
+      [
+        { bx: 0.65, by: 0.30, rs: 0.34, speed: 0.45, phase: 1.2, r:  74, g:  20, b: 140, a: 0.055 },
+        { bx: 0.30, by: 0.70, rs: 0.32, speed: 0.55, phase: 3.5, r: 253, g: 213, b: 178, a: 0.085 },
+      ],
+      // Section 4 (about): 3 orbs
+      [
+        { bx: 0.20, by: 0.40, rs: 0.30, speed: 0.48, phase: 0.8, r: 194, g:  65, b:  12, a: 0.055 },
+        { bx: 0.70, by: 0.25, rs: 0.28, speed: 0.60, phase: 4.0, r: 234, g:  88, b:  12, a: 0.065 },
+        { bx: 0.50, by: 0.75, rs: 0.32, speed: 0.35, phase: 5.5, r: 245, g: 158, b:  11, a: 0.075 },
+      ],
+      // Section 5 (contact): 2 orbs
+      [
+        { bx: 0.80, by: 0.45, rs: 0.34, speed: 0.42, phase: 2.5, r:  74, g:  20, b: 140, a: 0.055 },
+        { bx: 0.15, by: 0.60, rs: 0.30, speed: 0.52, phase: 4.8, r: 253, g: 213, b: 178, a: 0.085 },
+      ],
+    ];
+    return configs[index] || configs[1];
   }
 
   // ── Public API ───────────────────────────────────────────
@@ -531,48 +562,34 @@ class AmbientBackground {
 
   // ── IntersectionObserver ─────────────────────────────────
   _setupObserver() {
-    const sections = document.querySelectorAll(
-      '.why-us, .portfolio, .section--warm-accent, .contact'
-    );
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          this.visibleSections.add(entry.target);
-        } else {
-          this.visibleSections.delete(entry.target);
-        }
+        const sec = this.sections.find(s => s.section === entry.target);
+        if (sec) sec.visible = entry.isIntersecting;
       });
-      const shouldRun = this.visibleSections.size > 0;
-      if (shouldRun && !this.running) {
+      const anyVisible = this.sections.some(s => s.visible);
+      if (anyVisible && !this.running) {
         this.running = true;
         this._loop();
-      } else if (!shouldRun) {
+      } else if (!anyVisible) {
         this.running = false;
       }
     }, { threshold: 0 });
 
-    sections.forEach(s => observer.observe(s));
-  }
-
-  // Returns [{top, bottom}] in CSS-pixel viewport coords for visible eligible sections
-  _getVisibleBands() {
-    const bands = [];
-    this.visibleSections.forEach(section => {
-      const rect   = section.getBoundingClientRect();
-      const top    = Math.max(0, rect.top);
-      const bottom = Math.min(this.h, rect.bottom);
-      if (bottom > top) bands.push({ top, bottom });
-    });
-    return bands;
+    this.sections.forEach(s => observer.observe(s.section));
   }
 
   // ── Resize ───────────────────────────────────────────────
   _resize() {
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-    this.w   = this.canvas.offsetWidth;
-    this.h   = this.canvas.offsetHeight;
-    this.canvas.width  = this.w * this.dpr;
-    this.canvas.height = this.h * this.dpr;
+    this.sections.forEach(s => {
+      const w = s.section.offsetWidth;
+      const h = s.section.offsetHeight;
+      s.w = w;
+      s.h = h;
+      s.canvas.width  = w * this.dpr;
+      s.canvas.height = h * this.dpr;
+    });
   }
 
   // ── Animation loop ───────────────────────────────────────
@@ -584,41 +601,42 @@ class AmbientBackground {
   }
 
   _draw() {
-    const { ctx, w, h, dpr, time: t } = this;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, w, h);
+    const t = this.time;
 
-    const bands = this._getVisibleBands();
-    if (bands.length === 0) return;
+    // Determine which section gets the shooting star (first visible)
+    const shootingTarget = this.isDark
+      ? this.sections.find(s => s.visible) || null
+      : null;
 
-    // Clip to the vertical bands of visible eligible sections
-    ctx.save();
-    ctx.beginPath();
-    bands.forEach(({ top, bottom }) => ctx.rect(0, top, w, bottom - top));
-    ctx.clip();
-
-    if (this.isDark) {
-      // Spawn shooting star when the timer expires
-      if (!this.shootingStar && t >= this.nextShootingStarAt) {
-        this._spawnShootingStar();
-        this.nextShootingStarAt = t + this._randomShootingDelay();
-      }
-      this._drawDarkStars();
-      this._drawShootingStar();
-    } else {
-      this._drawLightOrbs();
+    // Spawn shooting star when timer expires (dark mode only)
+    if (this.isDark && shootingTarget && !this.shootingStar && t >= this.nextShootingStarAt) {
+      this._spawnShootingStar(shootingTarget);
+      this.nextShootingStarAt = t + this._randomShootingDelay();
     }
 
-    ctx.restore();
+    this.sections.forEach(sec => {
+      if (!sec.visible) return;
+
+      const { ctx, w, h } = sec;
+      ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      if (this.isDark) {
+        this._drawDarkStars(sec);
+        if (sec === shootingTarget) this._drawShootingStar(sec);
+      } else if (!sec.starsOnly) {
+        this._drawLightOrbs(sec);
+      }
+    });
   }
 
   // ── Light mode — drifting gradient orbs ──────────────────
-  _drawLightOrbs() {
-    const { ctx, w, h, time: t } = this;
+  _drawLightOrbs(sec) {
+    const { ctx, w, h } = sec;
+    const t    = this.time;
     const base = Math.min(w, h);
 
-    this.orbs.forEach(orb => {
-      // Drift on independent sine/cosine paths — max ±5 % of viewport width
+    sec.orbs.forEach(orb => {
       const fx = Math.sin(t * orb.speed       + orb.phase) * 0.05;
       const fy = Math.cos(t * orb.speed * 0.7 + orb.phase) * 0.04;
 
@@ -626,7 +644,6 @@ class AmbientBackground {
       const y = (orb.by + fy) * h;
       const r = orb.rs * base;
 
-      // Large radial gradient — hard centre fading to transparent at 70 %
       const g = ctx.createRadialGradient(x, y, 0, x, y, r);
       g.addColorStop(0,   `rgba(${orb.r},${orb.g},${orb.b},${orb.a})`);
       g.addColorStop(0.7, `rgba(${orb.r},${orb.g},${orb.b},0)`);
@@ -640,10 +657,11 @@ class AmbientBackground {
   }
 
   // ── Dark mode — twinkling starfield ──────────────────────
-  _drawDarkStars() {
-    const { ctx, w, h, time: t } = this;
+  _drawDarkStars(sec) {
+    const { ctx, w, h } = sec;
+    const t = this.time;
 
-    this.stars.forEach(star => {
+    sec.stars.forEach(star => {
       const x = star.nx * w;
       const y = star.ny * h;
       // Opacity oscillates between 0.15 and 0.60 on a sine wave
@@ -662,19 +680,19 @@ class AmbientBackground {
     return (8 + Math.random() * 7) * 60 * 0.004;
   }
 
-  _spawnShootingStar() {
+  _spawnShootingStar(sec) {
     const angleDeg = 30 + Math.random() * 15;          // 30–45 °
     const angle    = angleDeg * Math.PI / 180;
-    const speed    = this.w * 0.010;                   // crosses ~40 % of width in ~0.8 s
+    const speed    = sec.w * 0.010;                    // crosses ~40 % of width in ~0.8 s
     this.shootingStar = {
-      x:  this.w * (0.4 + Math.random() * 0.6),        // start right 60 %
-      y:  this.h * Math.random() * 0.3,                 // start top 30 %
+      x:  sec.w * (0.4 + Math.random() * 0.6),         // start right 60 %
+      y:  sec.h * Math.random() * 0.3,                  // start top 30 %
       vx: -Math.cos(angle) * speed,                     // always left
       vy:  Math.sin(angle) * speed,                     // always down
     };
   }
 
-  _drawShootingStar() {
+  _drawShootingStar(sec) {
     const ss = this.shootingStar;
     if (!ss) return;
 
@@ -683,35 +701,36 @@ class AmbientBackground {
     ss.y += ss.vy;
 
     // Remove when fully off canvas
-    if (ss.x < -100 || ss.y > this.h + 100) {
+    if (ss.x < -100 || ss.y > sec.h + 100) {
       this.shootingStar = null;
       return;
     }
 
-    // Tail: 80 px behind the head, fading to transparent
+    // Tail: 50 px behind the head, fading to transparent
     const mag = Math.hypot(ss.vx, ss.vy);
-    const tailLength = 80;
+    const tailLength = 50;
     const tx = ss.x - (ss.vx / mag) * tailLength;
     const ty = ss.y - (ss.vy / mag) * tailLength;
 
-    const grad = this.ctx.createLinearGradient(tx, ty, ss.x, ss.y);
+    const grad = sec.ctx.createLinearGradient(tx, ty, ss.x, ss.y);
     grad.addColorStop(0, 'rgba(94,234,212,0)');          // tail tip — transparent
     grad.addColorStop(1, 'rgba(94,234,212,0.7)');        // head — teal
 
-    this.ctx.save();
-    this.ctx.beginPath();
-    this.ctx.moveTo(tx, ty);
-    this.ctx.lineTo(ss.x, ss.y);
-    this.ctx.strokeStyle = grad;
-    this.ctx.lineWidth   = 1.5;
-    this.ctx.lineCap     = 'round';
-    this.ctx.stroke();
-    this.ctx.restore();
+    sec.ctx.save();
+    sec.ctx.beginPath();
+    sec.ctx.moveTo(tx, ty);
+    sec.ctx.lineTo(ss.x, ss.y);
+    sec.ctx.strokeStyle = grad;
+    sec.ctx.lineWidth   = 1.0;
+    sec.ctx.lineCap     = 'round';
+    sec.ctx.stroke();
+    sec.ctx.restore();
   }
 }
 
 // Instantiate — skip entirely when reduced motion is active
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  const ambientCanvas = document.getElementById('ambient-canvas');
-  if (ambientCanvas) ambientBg = new AmbientBackground(ambientCanvas);
+  if (document.querySelector('.ambient-section-canvas')) {
+    ambientBg = new AmbientBackground();
+  }
 }
