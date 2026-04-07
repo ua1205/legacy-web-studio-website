@@ -473,10 +473,11 @@ if (themeToggle) {
     const overlay = document.createElement('div');
     overlay.classList.add('theme-ripple');
     overlay.style.background = oldBg;
-    // No initial clip-path: overlay covers everything, hiding the new theme beneath
+    // Start with a circle large enough to cover the entire viewport
+    overlay.style.clipPath = `circle(150vmax at ${x}px ${y}px)`;
     document.body.appendChild(overlay);
 
-    // Force reflow, then animate: overlay contracts to a point at the toggle
+    // Force reflow, then animate: contract the circle to zero at the toggle point
     overlay.offsetHeight;
     overlay.style.clipPath = `circle(0px at ${x}px ${y}px)`;
 
