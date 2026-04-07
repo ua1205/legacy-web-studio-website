@@ -440,10 +440,55 @@ if (themeToggle) {
 
   themeToggle.addEventListener('change', () => {
     const dark = themeToggle.checked;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Reduced motion — instant swap, no ripple
+    if (reducedMotion) {
+      document.documentElement.classList.toggle('dark', dark);
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+      if (sunset) sunset.setTheme(dark);
+      if (ambientBg) ambientBg.setTheme(dark);
+      return;
+    }
+
+    // If a ripple is already running, kill it immediately
+    const existing = document.querySelector('.theme-ripple');
+    if (existing) existing.remove();
+
+    // Get toggle centre coordinates
+    const toggleRect = themeToggle.closest('.theme-switch').getBoundingClientRect();
+    const x = toggleRect.left + toggleRect.width  / 2;
+    const y = toggleRect.top  + toggleRect.height / 2;
+
+    // OLD theme colour — the overlay hides the new theme until it contracts away
+    const oldBg = dark ? '#FAF7F2' : '#0B0D17';
+
+    // Apply new theme IMMEDIATELY so it's ready underneath the overlay
     document.documentElement.classList.toggle('dark', dark);
     localStorage.setItem('theme', dark ? 'dark' : 'light');
     if (sunset) sunset.setTheme(dark);
     if (ambientBg) ambientBg.setTheme(dark);
+
+    // Create overlay coloured with the OLD theme — covers the entire screen
+    const overlay = document.createElement('div');
+    overlay.classList.add('theme-ripple');
+    overlay.style.background = oldBg;
+    // No initial clip-path: overlay covers everything, hiding the new theme beneath
+    document.body.appendChild(overlay);
+
+    // Force reflow, then animate: overlay contracts to a point at the toggle
+    overlay.offsetHeight;
+    overlay.style.clipPath = `circle(0px at ${x}px ${y}px)`;
+
+    // Remove overlay once it has fully contracted
+    overlay.addEventListener('transitionend', () => {
+      overlay.remove();
+    }, { once: true });
+
+    // Safety fallback — remove if transitionend never fires
+    setTimeout(() => {
+      if (overlay.parentNode) overlay.remove();
+    }, 1000);
   });
 
   // Listen for system preference changes (only when no stored preference)

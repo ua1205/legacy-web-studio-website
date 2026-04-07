@@ -1936,6 +1936,16 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   z-index: 2;
 }
 
+/* ---- THEME RIPPLE OVERLAY ---- */
+.theme-ripple {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  will-change: clip-path;
+  transition: clip-path 0.6s ease-in-out;
+}
+
 /* ---- PRINT ---- */
 @media print {
   * { animation: none !important; transition: none !important; }
