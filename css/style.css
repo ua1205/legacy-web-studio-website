@@ -1936,14 +1936,59 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   z-index: 2;
 }
 
-/* ---- THEME RIPPLE OVERLAY ---- */
-.theme-ripple {
+/* ---- THEME WAVE TRANSITION ---- */
+.theme-wave-layer {
   position: fixed;
   inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  transition: clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: clip-path;
+}
+
+.theme-wave-ring {
+  position: fixed;
   z-index: 9999;
   pointer-events: none;
-  will-change: clip-path;
-  transition: clip-path 0.6s ease-in-out;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: transparent;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 1;
+  backdrop-filter: blur(6px) brightness(1.15);
+  -webkit-backdrop-filter: blur(6px) brightness(1.15);
+  animation: themeWaveRipple 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.theme-wave-ring--dark {
+  box-shadow:
+    0 0 40px 15px rgba(11, 13, 23, 0.25),
+    0 0 80px 30px rgba(11, 13, 23, 0.12),
+    inset 0 0 12px 6px rgba(11, 13, 23, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.theme-wave-ring--light {
+  box-shadow:
+    0 0 40px 15px rgba(250, 247, 242, 0.3),
+    0 0 80px 30px rgba(250, 247, 242, 0.15),
+    inset 0 0 12px 6px rgba(250, 247, 242, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+@keyframes themeWaveRipple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(250);
+    opacity: 0;
+  }
 }
 
 /* ---- PRINT ---- */

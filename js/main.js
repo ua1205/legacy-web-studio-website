@@ -442,7 +442,6 @@ if (themeToggle) {
     const dark = themeToggle.checked;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Reduced motion — instant swap, no ripple
     if (reducedMotion) {
       document.documentElement.classList.toggle('dark', dark);
       localStorage.setItem('theme', dark ? 'dark' : 'light');
@@ -451,45 +450,47 @@ if (themeToggle) {
       return;
     }
 
-    // If a ripple is already running, kill it immediately
-    const existing = document.querySelector('.theme-ripple');
-    if (existing) existing.remove();
+    document.querySelectorAll('.theme-wave-layer, .theme-wave-ring').forEach(el => el.remove());
 
-    // Get toggle centre coordinates
     const toggleRect = themeToggle.closest('.theme-switch').getBoundingClientRect();
-    const x = toggleRect.left + toggleRect.width  / 2;
-    const y = toggleRect.top  + toggleRect.height / 2;
+    const x = toggleRect.left + toggleRect.width / 2;
+    const y = toggleRect.top + toggleRect.height / 2;
 
-    // OLD theme colour — the overlay hides the new theme until it contracts away
-    const oldBg = dark ? '#FAF7F2' : '#0B0D17';
+    const layer = document.createElement('div');
+    layer.classList.add('theme-wave-layer');
+    layer.style.background = dark ? '#0B0D17' : '#FAF7F2';
+    layer.style.clipPath = `circle(0px at ${x}px ${y}px)`;
+    document.body.appendChild(layer);
 
-    // Apply new theme IMMEDIATELY so it's ready underneath the overlay
-    document.documentElement.classList.toggle('dark', dark);
-    localStorage.setItem('theme', dark ? 'dark' : 'light');
-    if (sunset) sunset.setTheme(dark);
-    if (ambientBg) ambientBg.setTheme(dark);
+    const ring = document.createElement('div');
+    ring.classList.add('theme-wave-ring');
+    ring.classList.add(dark ? 'theme-wave-ring--dark' : 'theme-wave-ring--light');
+    ring.style.left = x + 'px';
+    ring.style.top = y + 'px';
+    document.body.appendChild(ring);
 
-    // Create overlay coloured with the OLD theme — covers the entire screen
-    const overlay = document.createElement('div');
-    overlay.classList.add('theme-ripple');
-    overlay.style.background = oldBg;
-    // Start with a circle large enough to cover the entire viewport
-    overlay.style.clipPath = `circle(150vmax at ${x}px ${y}px)`;
-    document.body.appendChild(overlay);
+    layer.offsetHeight;
+    layer.style.clipPath = `circle(150vmax at ${x}px ${y}px)`;
 
-    // Force reflow, then animate: contract the circle to zero at the toggle point
-    overlay.offsetHeight;
-    overlay.style.clipPath = `circle(0px at ${x}px ${y}px)`;
+    setTimeout(() => {
+      document.documentElement.classList.toggle('dark', dark);
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+      if (sunset) sunset.setTheme(dark);
+      if (ambientBg) ambientBg.setTheme(dark);
+    }, 350);
 
-    // Remove overlay once it has fully contracted
-    overlay.addEventListener('transitionend', () => {
-      overlay.remove();
+    layer.addEventListener('transitionend', () => {
+      layer.remove();
     }, { once: true });
 
-    // Safety fallback — remove if transitionend never fires
+    ring.addEventListener('animationend', () => {
+      ring.remove();
+    }, { once: true });
+
     setTimeout(() => {
-      if (overlay.parentNode) overlay.remove();
-    }, 1000);
+      if (layer.parentNode) layer.remove();
+      if (ring.parentNode) ring.remove();
+    }, 1200);
   });
 
   // Listen for system preference changes (only when no stored preference)
