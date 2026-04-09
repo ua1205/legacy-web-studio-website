@@ -169,6 +169,25 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: relative;
   cursor: pointer;
   text-decoration: none;
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-opacity: 0;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle 80px at var(--glow-x) var(--glow-y), rgba(255, 255, 255, 0.15), transparent 70%);
+  opacity: var(--glow-opacity);
+  transition: opacity 0.2s ease;
+}
+
+.dark .btn::after {
+  background: radial-gradient(circle 80px at var(--glow-x) var(--glow-y), rgba(45, 212, 191, 0.12), transparent 70%);
 }
 
 .btn--warm {
@@ -588,7 +607,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ---- HERO ---- */
 .hero {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 0;
   min-height: 100svh;
   display: flex;
   align-items: center;
@@ -863,6 +884,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ---- WHY US ---- */
 .why-us {
   background: var(--cream);
+  z-index: 1;
 }
 
 .why-us__grid {
@@ -1009,7 +1031,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- PORTFOLIO ---- */
-.portfolio { background: var(--sand); }
+.portfolio { background: var(--sand); position: relative; z-index: 1; }
 
 .portfolio__grid {
   display: grid;
@@ -1214,7 +1236,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- CONTACT ---- */
-.contact { background: var(--cream); }
+.contact { background: var(--cream); position: relative; z-index: 1; }
 
 /* Calendly banner */
 .contact__calendly-banner {
@@ -1416,6 +1438,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   background: #0F0805;
   color: rgba(255,255,255,0.55);
   padding: 72px 0 0;
+  position: relative;
+  z-index: 1;
 }
 
 .footer__grid {
@@ -1557,6 +1581,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 @media (max-width: 960px) {
   :root { --py: 72px; }
+
+  .hero { position: relative; }
 
   .hero__inner {
     grid-template-columns: 1fr;
@@ -1898,7 +1924,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- AMBIENT BACKGROUND CANVAS ---- */
-.hero,
 .why-us,
 .services,
 .portfolio,
@@ -1906,6 +1931,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .contact {
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .ambient-section-canvas {
@@ -1936,57 +1962,517 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   z-index: 2;
 }
 
-/* ---- THEME WAVE TRANSITION ---- */
-.theme-wave-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-  transition: clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: clip-path;
-}
-
-.theme-wave-ring {
+/* ---- THEME TOGGLE RING PULSE ---- */
+.theme-ring {
   position: fixed;
   z-index: 9999;
   pointer-events: none;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: transparent;
   transform: translate(-50%, -50%) scale(0);
   opacity: 1;
-  backdrop-filter: blur(6px) brightness(1.15);
-  -webkit-backdrop-filter: blur(6px) brightness(1.15);
-  animation: themeWaveRipple 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: themeRingPulse 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
-.theme-wave-ring--dark {
+.theme-ring--dark {
   box-shadow:
-    0 0 40px 15px rgba(11, 13, 23, 0.25),
-    0 0 80px 30px rgba(11, 13, 23, 0.12),
-    inset 0 0 12px 6px rgba(11, 13, 23, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+    0 0 8px 4px rgba(45, 212, 191, 0.3),
+    0 0 24px 8px rgba(45, 212, 191, 0.15),
+    0 0 60px 20px rgba(11, 13, 23, 0.12);
 }
 
-.theme-wave-ring--light {
+.theme-ring--light {
   box-shadow:
-    0 0 40px 15px rgba(250, 247, 242, 0.3),
-    0 0 80px 30px rgba(250, 247, 242, 0.15),
-    inset 0 0 12px 6px rgba(250, 247, 242, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+    0 0 8px 4px rgba(245, 158, 11, 0.35),
+    0 0 24px 8px rgba(245, 158, 11, 0.18),
+    0 0 60px 20px rgba(250, 247, 242, 0.15);
 }
 
-@keyframes themeWaveRipple {
+@keyframes themeRingPulse {
   0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.9;
+  }
+  40% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(350);
+    opacity: 0;
+  }
+}
+
+/* ---- SEND BUTTON ---- */
+.btn-send {
+  --send-primary: var(--sunset-orange);
+  --send-bg-1: #fff;
+  --send-bg-2: var(--sand);
+  --send-radius: var(--r-md);
+  cursor: pointer;
+  border-radius: var(--send-radius);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.15);
+  border: none;
+  box-shadow: 0 0.5px 0.5px 1px rgba(255,255,255,0.2),
+    0 10px 20px rgba(0,0,0,0.12), 0 4px 5px 0 rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+  width: 100%;
+  padding: 20px;
+  height: 56px;
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  letter-spacing: 0.03em;
+}
+
+.btn-send:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 1px 2px rgba(255,255,255,0.3),
+    0 15px 30px rgba(0,0,0,0.18), 0 10px 3px -3px rgba(0,0,0,0.04);
+}
+
+.btn-send:active {
+  transform: scale(1);
+  box-shadow: 0 0 1px 2px rgba(255,255,255,0.3),
+    0 10px 3px -3px rgba(0,0,0,0.15);
+}
+
+.btn-send::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--send-radius);
+  border: 2.5px solid transparent;
+  background: linear-gradient(var(--send-bg-1), var(--send-bg-2)) padding-box,
+    linear-gradient(to bottom, rgba(0,0,0,0.08), rgba(0,0,0,0.25)) border-box;
+  z-index: 0;
+  transition: all 0.4s ease;
+}
+
+.btn-send:hover::after {
+  transform: scale(1.05, 1.1);
+  box-shadow: inset 0 -1px 3px 0 rgba(255,255,255,1);
+}
+
+.btn-send::before {
+  content: "";
+  inset: 7px 6px 6px 6px;
+  position: absolute;
+  background: linear-gradient(to top, var(--send-bg-1), var(--send-bg-2));
+  border-radius: 30px;
+  filter: blur(0.5px);
+  z-index: 2;
+}
+
+.btn-send__state {
+  padding-left: 29px;
+  z-index: 2;
+  display: flex;
+  position: relative;
+}
+
+.btn-send__state p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+.btn-send__state--sent { display: none; }
+
+.btn-send__icon {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  margin: auto;
+  transform: scale(1.25);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--send-primary);
+}
+
+.btn-send__icon svg { overflow: visible; }
+
+.btn-send__state p span {
+  display: block;
+  opacity: 0;
+  animation: btnSendSlideDown 0.8s ease forwards calc(var(--i) * 0.03s);
+}
+
+.btn-send:hover p span {
+  opacity: 1;
+  animation: btnSendWave 0.5s ease forwards calc(var(--i) * 0.02s);
+}
+
+.btn-send:hover .btn-send__state--default .btn-send__icon {
+  transform: rotate(45deg) scale(1.25);
+}
+
+.btn-send__state--default .btn-send__icon svg {
+  animation: btnSendLand 0.6s ease forwards;
+}
+
+.btn-send__outline {
+  position: absolute;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  inset: -2px -3.5px;
+}
+
+.btn-send__outline::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background: conic-gradient(
+    from 180deg,
+    transparent 50%,
+    var(--sunset-purple) 62%,
+    var(--sunset-orange) 75%,
+    var(--sunset-gold) 85%,
+    transparent 100%
+  );
+  animation: btnSendSpin 2s linear infinite;
+  animation-play-state: paused;
+}
+
+.dark .btn-send__outline::before {
+  background: conic-gradient(
+    from 180deg,
+    transparent 50%,
+    #8B5CF6 62%,
+    #2DD4BF 75%,
+    #5EEAD4 85%,
+    transparent 100%
+  );
+}
+
+.btn-send:hover .btn-send__outline { opacity: 1; }
+.btn-send:hover .btn-send__outline::before { animation-play-state: running; }
+
+/* Sent state */
+.btn-send.sent .btn-send__state--default { position: absolute; }
+
+.btn-send.sent .btn-send__state--default p span {
+  opacity: 1;
+  animation: btnSendDisappear 0.6s ease forwards calc(var(--i) * 0.03s);
+}
+
+.btn-send.sent .btn-send__state--default .btn-send__icon svg {
+  animation: btnSendTakeOff 0.8s linear forwards;
+}
+
+.btn-send.sent .btn-send__state--default .btn-send__icon {
+  transform: rotate(0) scale(1.25);
+}
+
+.btn-send__state--default .btn-send__icon::before {
+  content: "";
+  position: absolute;
+  top: 50%; height: 2px; width: 0; left: -5px;
+  background: linear-gradient(to right, transparent, var(--send-primary));
+}
+
+.btn-send.sent .btn-send__state--default .btn-send__icon::before {
+  animation: btnSendContrail 0.8s linear forwards;
+}
+
+.btn-send.sent .btn-send__state--sent { display: flex; }
+
+.btn-send.sent .btn-send__state--sent span {
+  opacity: 0;
+  animation: btnSendSlideDown 0.8s ease forwards calc(var(--i) * 0.2s);
+}
+
+.btn-send.sent .btn-send__state--sent .btn-send__icon svg {
+  opacity: 0;
+  animation: btnSendAppear 1.2s ease forwards 0.8s;
+}
+
+.btn-send.sent .btn-send__state--sent .btn-send__icon { color: var(--success); }
+
+.btn-send.loading { pointer-events: none; opacity: 0.8; }
+
+.btn-send:focus-visible {
+  outline: 2.5px solid var(--sunset-orange);
+  outline-offset: 3px;
+}
+
+@keyframes btnSendSpin { to { transform: rotate(360deg); } }
+
+@keyframes btnSendWave {
+  30%  { opacity: 1; transform: translateY(4px); }
+  50%  { opacity: 1; transform: translateY(-3px); color: var(--send-primary); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes btnSendSlideDown {
+  0%   { opacity: 0; transform: translateY(-20px) translateX(5px) rotate(-90deg); color: var(--send-primary); filter: blur(5px); }
+  30%  { opacity: 1; transform: translateY(4px) translateX(0) rotate(0); filter: blur(0); }
+  50%  { opacity: 1; transform: translateY(-3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes btnSendDisappear {
+  from { opacity: 1; }
+  to   { opacity: 0; transform: translateX(5px) translateY(20px); color: var(--send-primary); filter: blur(5px); }
+}
+
+@keyframes btnSendTakeOff {
+  0%   { opacity: 1; }
+  60%  { opacity: 1; transform: translateX(70px) rotate(45deg) scale(2); }
+  100% { opacity: 0; transform: translateX(160px) rotate(45deg) scale(0); }
+}
+
+@keyframes btnSendLand {
+  0%   { transform: translateX(-60px) translateY(30px) rotate(-50deg) scale(2); opacity: 0; filter: blur(3px); }
+  100% { transform: translateX(0) translateY(0) rotate(0); opacity: 1; filter: blur(0); }
+}
+
+@keyframes btnSendContrail {
+  0%   { width: 0; opacity: 1; }
+  8%   { width: 15px; }
+  60%  { opacity: 0.7; width: 80px; }
+  100% { opacity: 0; width: 160px; }
+}
+
+@keyframes btnSendAppear {
+  0%   { opacity: 0; transform: scale(4) rotate(-40deg); color: var(--send-primary); filter: blur(4px); }
+  30%  { opacity: 1; transform: scale(0.6); filter: blur(1px); }
+  50%  { opacity: 1; transform: scale(1.2); filter: blur(0); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Dark mode */
+.dark .btn-send {
+  --send-primary: #2DD4BF;
+  --send-bg-1: #1E2235;
+  --send-bg-2: #131C2E;
+  color: #F1F5F9;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+  box-shadow: 0 0.5px 0.5px 1px rgba(255,255,255,0.05),
+    0 10px 20px rgba(0,0,0,0.3), 0 4px 5px 0 rgba(0,0,0,0.1);
+}
+
+.dark .btn-send::after {
+  background: linear-gradient(var(--send-bg-1), var(--send-bg-2)) padding-box,
+    linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.02)) border-box;
+}
+
+.dark .btn-send::before {
+  background: linear-gradient(to top, var(--send-bg-1), var(--send-bg-2));
+}
+
+.dark .btn-send:focus-visible { outline-color: #2DD4BF; }
+
+/* ---- ARROW BUTTON ---- */
+.btn-arrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 36px;
+  border: 4px solid transparent;
+  border-radius: 100px;
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--sunset-deep);
+  background: transparent;
+  box-shadow: 0 0 0 2px var(--sunset-orange);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-arrow__icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  fill: var(--sunset-deep);
+  z-index: 2;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-arrow__icon--right { right: 16px; }
+.btn-arrow__icon--left  { left: -25%; }
+
+.btn-arrow__circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: var(--peach);
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-arrow__text {
+  position: relative;
+  z-index: 1;
+  transform: translateX(-12px);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-arrow:hover {
+  box-shadow: 0 0 0 12px transparent;
+  color: var(--text-dark);
+  border-radius: var(--r-md);
+}
+
+.btn-arrow:hover .btn-arrow__icon--right  { right: -25%; }
+.btn-arrow:hover .btn-arrow__icon--left   { left: 16px; }
+.btn-arrow:hover .btn-arrow__text         { transform: translateX(12px); }
+.btn-arrow:hover .btn-arrow__circle       { width: var(--circle-size, 220px); height: var(--circle-size, 220px); opacity: 1; }
+.btn-arrow:active                         { transform: scale(0.95); }
+
+.btn-arrow:focus-visible {
+  outline: 2.5px solid var(--sunset-orange);
+  outline-offset: 3px;
+}
+
+/* Hero + Services: always dark background → light text */
+.hero .btn-arrow,
+.section--deep .btn-arrow {
+  color: #fff;
+  box-shadow: 0 0 0 2px var(--sunset-gold);
+}
+
+.hero .btn-arrow__icon,
+.section--deep .btn-arrow__icon { fill: #fff; }
+
+.hero .btn-arrow__circle,
+.section--deep .btn-arrow__circle { background: rgba(245, 158, 11, 0.25); }
+
+.hero .btn-arrow:hover,
+.section--deep .btn-arrow:hover { color: var(--sunset-deep); }
+
+.hero .btn-arrow:hover .btn-arrow__icon,
+.section--deep .btn-arrow:hover .btn-arrow__icon { fill: var(--sunset-deep); }
+
+.hero .btn-arrow:hover .btn-arrow__circle,
+.section--deep .btn-arrow:hover .btn-arrow__circle { background: var(--sunset-gold); }
+
+/* About: warm peach background — keep gold ring and fill on hover */
+.section--warm-accent .btn-arrow:hover {
+  box-shadow: 0 0 0 2px var(--sunset-gold);
+}
+
+.section--warm-accent .btn-arrow:hover .btn-arrow__circle {
+  background: var(--sunset-gold);
+}
+
+/* Calendly banner: dark gradient background → light text */
+.contact__calendly-banner .btn-arrow {
+  color: #fff;
+  box-shadow: 0 0 0 2px var(--sunset-gold);
+}
+
+.contact__calendly-banner .btn-arrow__icon { fill: #fff; }
+
+.contact__calendly-banner .btn-arrow__circle { background: rgba(245, 158, 11, 0.25); }
+
+.contact__calendly-banner .btn-arrow:hover { color: var(--sunset-deep); }
+
+.contact__calendly-banner .btn-arrow:hover .btn-arrow__icon { fill: var(--sunset-deep); }
+
+.contact__calendly-banner .btn-arrow:hover .btn-arrow__circle { background: var(--sunset-gold); }
+
+/* Dark mode */
+.dark .btn-arrow {
+  color: #F1F5F9;
+  box-shadow: 0 0 0 2px #2DD4BF;
+}
+
+.dark .btn-arrow__icon { fill: #F1F5F9; }
+.dark .btn-arrow__circle { background: rgba(45, 212, 191, 0.2); }
+.dark .btn-arrow:hover { color: #0B0D17; }
+.dark .btn-arrow:hover .btn-arrow__icon { fill: #0B0D17; }
+.dark .btn-arrow:hover .btn-arrow__circle { background: #2DD4BF; }
+
+.dark .hero .btn-arrow,
+.dark .section--deep .btn-arrow {
+  color: #F1F5F9;
+  box-shadow: 0 0 0 2px #5EEAD4;
+}
+
+.dark .hero .btn-arrow__icon,
+.dark .section--deep .btn-arrow__icon { fill: #F1F5F9; }
+
+.dark .hero .btn-arrow__circle,
+.dark .section--deep .btn-arrow__circle { background: rgba(94, 234, 212, 0.2); }
+
+.dark .hero .btn-arrow:hover,
+.dark .section--deep .btn-arrow:hover { color: #0B0D17; }
+
+.dark .hero .btn-arrow:hover .btn-arrow__icon,
+.dark .section--deep .btn-arrow:hover .btn-arrow__icon { fill: #0B0D17; }
+
+.dark .hero .btn-arrow:hover .btn-arrow__circle,
+.dark .section--deep .btn-arrow:hover .btn-arrow__circle { background: #5EEAD4; }
+
+@media (max-width: 700px) {
+  .btn-arrow { width: 100%; justify-content: center; }
+}
+
+/* ---- MICRO-INTERACTIONS ---- */
+.cursor-glow {
+  position: fixed;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(circle, rgba(234, 88, 12, 0.06) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+
+.cursor-glow--hidden { opacity: 0; }
+
+.dark .cursor-glow {
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.06) 0%, transparent 70%);
+}
+
+.click-ripple {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9997;
+  transform: translate(-50%, -50%);
+  background: rgba(234, 88, 12, 0.12);
+  animation: click-ripple-expand 0.4s ease-out forwards;
+}
+
+.dark .click-ripple {
+  background: rgba(45, 212, 191, 0.12);
+}
+
+@keyframes click-ripple-expand {
+  from {
     transform: translate(-50%, -50%) scale(0);
     opacity: 1;
   }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(250);
+  to {
+    transform: translate(-50%, -50%) scale(1);
     opacity: 0;
   }
 }

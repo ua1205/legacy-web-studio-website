@@ -197,7 +197,9 @@ class SunsetCanvas {
 
 // Initialise canvas
 const heroCanvas = document.getElementById('hero-canvas');
-const heroSection = document.getElementById('home');
+const heroSection    = document.getElementById('home');
+const heroInner      = document.querySelector('.hero__inner');
+const heroScrollHint = document.querySelector('.hero__scroll-hint');
 let sunset = null;
 
 // Defined at module level so the unified scroll handler below can call it
@@ -240,9 +242,20 @@ const setNavScrolled = () => {
 };
 
 // J2: Single scroll handler — replaces two separate listeners
+const updateHeroParallax = () => {
+  if (!heroInner || !heroSection) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const heroH    = heroSection.offsetHeight;
+  const progress = Math.min(window.scrollY / heroH, 1);
+  heroInner.style.transform = `translateY(${-progress * heroH * 0.35}px)`;
+  heroInner.style.opacity   = Math.max(0, 1 - progress * 1.5);
+  if (heroScrollHint) heroScrollHint.style.opacity = Math.max(0, 1 - progress * 3);
+};
+
 const handleScroll = () => {
   updateScroll();
   setNavScrolled();
+  updateHeroParallax();
 };
 
 window.addEventListener('scroll', handleScroll, { passive: true });
@@ -379,7 +392,7 @@ if (form) {
       return;
     }
 
-    submitBtn.classList.add('btn--loading');
+    submitBtn.classList.add('loading');
     submitBtn.disabled = true;
     formSuccess.classList.remove('visible');
 
@@ -405,6 +418,15 @@ if (form) {
 
       form.reset();
       Object.values(fields).forEach(f => f.el.setAttribute('aria-invalid', 'false'));
+
+      submitBtn.classList.remove('loading');
+      submitBtn.classList.add('sent');
+      submitBtn.disabled = true;
+      setTimeout(() => {
+        submitBtn.classList.remove('sent');
+        submitBtn.disabled = false;
+      }, 4000);
+
       formSuccess.textContent = '✓  Thank you — we\'ve received your message and will be in touch within one business day.';
       formSuccess.style.cssText = '';
       formSuccess.classList.add('visible');
@@ -417,8 +439,8 @@ if (form) {
       formSuccess.style.color = '#DC2626';
       formSuccess.classList.add('visible');
     } finally {
-      submitBtn.classList.remove('btn--loading');
-      submitBtn.disabled = false;
+      submitBtn.classList.remove('loading');
+      if (!submitBtn.classList.contains('sent')) submitBtn.disabled = false;
     }
   });
 }
@@ -440,57 +462,29 @@ if (themeToggle) {
 
   themeToggle.addEventListener('change', () => {
     const dark = themeToggle.checked;
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (reducedMotion) {
-      document.documentElement.classList.toggle('dark', dark);
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-      if (sunset) sunset.setTheme(dark);
-      if (ambientBg) ambientBg.setTheme(dark);
-      return;
-    }
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+    if (sunset) sunset.setTheme(dark);
+    if (ambientBg) ambientBg.setTheme(dark);
 
-    document.querySelectorAll('.theme-wave-layer, .theme-wave-ring').forEach(el => el.remove());
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    document.querySelectorAll('.theme-ring').forEach(el => el.remove());
 
     const toggleRect = themeToggle.closest('.theme-switch').getBoundingClientRect();
     const x = toggleRect.left + toggleRect.width / 2;
     const y = toggleRect.top + toggleRect.height / 2;
 
-    const layer = document.createElement('div');
-    layer.classList.add('theme-wave-layer');
-    layer.style.background = dark ? '#0B0D17' : '#FAF7F2';
-    layer.style.clipPath = `circle(0px at ${x}px ${y}px)`;
-    document.body.appendChild(layer);
-
     const ring = document.createElement('div');
-    ring.classList.add('theme-wave-ring');
-    ring.classList.add(dark ? 'theme-wave-ring--dark' : 'theme-wave-ring--light');
+    ring.classList.add('theme-ring');
+    ring.classList.add(dark ? 'theme-ring--dark' : 'theme-ring--light');
     ring.style.left = x + 'px';
     ring.style.top = y + 'px';
     document.body.appendChild(ring);
 
-    layer.offsetHeight;
-    layer.style.clipPath = `circle(150vmax at ${x}px ${y}px)`;
-
-    setTimeout(() => {
-      document.documentElement.classList.toggle('dark', dark);
-      localStorage.setItem('theme', dark ? 'dark' : 'light');
-      if (sunset) sunset.setTheme(dark);
-      if (ambientBg) ambientBg.setTheme(dark);
-    }, 350);
-
-    layer.addEventListener('transitionend', () => {
-      layer.remove();
-    }, { once: true });
-
-    ring.addEventListener('animationend', () => {
-      ring.remove();
-    }, { once: true });
-
-    setTimeout(() => {
-      if (layer.parentNode) layer.remove();
-      if (ring.parentNode) ring.remove();
-    }, 1200);
+    ring.addEventListener('animationend', () => ring.remove(), { once: true });
+    setTimeout(() => { if (ring.parentNode) ring.remove(); }, 800);
   });
 
   // Listen for system preference changes (only when no stored preference)
@@ -532,7 +526,7 @@ class AmbientBackground {
         index: i,
         w: 0,
         h: 0,
-        stars: this._generateStarsForSection(30 + Math.floor(Math.random() * 6)),
+        stars: this._generateStarsForSection(section.classList.contains('hero') ? 65 : (30 + Math.floor(Math.random() * 6))),
       });
     });
 
@@ -716,5 +710,91 @@ class AmbientBackground {
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   if (document.querySelector('.ambient-section-canvas')) {
     ambientBg = new AmbientBackground();
+  }
+}
+
+// ── Section 10: Micro-Interactions ──────────────────────────────────────────
+{
+  const hasHover = window.matchMedia('(hover: hover)').matches;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (hasHover && !reducedMotion) {
+
+    // ── 4a. Cursor Glow (80px, lerp trail) ────────────────────────────────
+    const glow = document.createElement('div');
+    glow.classList.add('cursor-glow', 'cursor-glow--hidden');
+    document.body.appendChild(glow);
+
+    let glowX = 0, glowY = 0, targetX = 0, targetY = 0, glowVisible = false, glowRAF = null;
+
+    const updateGlow = () => {
+      glowX += (targetX - glowX) * 0.15;
+      glowY += (targetY - glowY) * 0.15;
+      glow.style.left = glowX + 'px';
+      glow.style.top  = glowY + 'px';
+      if (glowVisible) glowRAF = requestAnimationFrame(updateGlow);
+    };
+
+    document.documentElement.addEventListener('mousemove', (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      if (!glowVisible) {
+        glowVisible = true;
+        glow.classList.remove('cursor-glow--hidden');
+        glowRAF = requestAnimationFrame(updateGlow);
+      }
+    });
+
+    document.documentElement.addEventListener('mouseleave', () => {
+      glowVisible = false;
+      glow.classList.add('cursor-glow--hidden');
+      if (glowRAF) cancelAnimationFrame(glowRAF);
+    });
+
+    // ── 4b. Click Ripple ───────────────────────────────────────────────────
+    let lastRippleTime = 0;
+
+    document.addEventListener('click', (e) => {
+      const now = Date.now();
+      if (now - lastRippleTime < 100) return;
+      lastRippleTime = now;
+
+      const ripple = document.createElement('div');
+      ripple.classList.add('click-ripple');
+      ripple.style.left = e.clientX + 'px';
+      ripple.style.top  = e.clientY + 'px';
+      document.body.appendChild(ripple);
+
+      ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+    });
+
+    // ── 4b-ii. Arrow Button Dynamic Circle Sizing ─────────────────────────
+    document.querySelectorAll('.btn-arrow').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        const rect = btn.getBoundingClientRect();
+        const size = Math.ceil(Math.hypot(rect.width, rect.height)) + 20;
+        btn.style.setProperty('--circle-size', size + 'px');
+      });
+    });
+
+    // ── 4c. Directional Button Glow ────────────────────────────────────────
+    document.querySelectorAll('.btn').forEach((btn) => {
+      btn.addEventListener('mouseenter', () => {
+        btn.style.setProperty('--glow-opacity', '1');
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btn.style.setProperty('--glow-opacity', '0');
+      });
+
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        btn.style.setProperty('--glow-x', x + 'px');
+        btn.style.setProperty('--glow-y', y + 'px');
+      }, { passive: true });
+    });
+
   }
 }
