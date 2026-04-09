@@ -464,6 +464,8 @@ if (themeToggle) {
     const dark = themeToggle.checked;
 
     document.documentElement.classList.toggle('dark', dark);
+    document.documentElement.setAttribute('data-color-scheme', dark ? 'dark' : 'light');
+    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
     localStorage.setItem('theme', dark ? 'dark' : 'light');
     if (sunset) sunset.setTheme(dark);
     if (ambientBg) ambientBg.setTheme(dark);
@@ -491,6 +493,8 @@ if (themeToggle) {
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
     if (!localStorage.getItem('theme')) {
       document.documentElement.classList.toggle('dark', e.matches);
+      document.documentElement.setAttribute('data-color-scheme', e.matches ? 'dark' : 'light');
+      document.documentElement.style.colorScheme = e.matches ? 'dark' : 'light';
       themeToggle.checked = e.matches;
       if (sunset) sunset.setTheme(e.matches);
       if (ambientBg) ambientBg.setTheme(e.matches);

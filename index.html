@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#1E0A3C" />
   <meta name="color-scheme" content="light dark" />
   <meta name="darkreader-lock" />
+  <meta name="night-eye-lock" />
   <meta name="description" content="Legacy Web Studio — Bespoke websites for estate planning and probate solicitors. Warm, professional, conversion-focused. Book a free strategy call." />
   <link rel="canonical" href="https://legacywebstudio.co.uk/" />
   <meta name="keywords" content="web design estate planning solicitors, probate law firm websites, legal web design UK, estate planning website" />
@@ -31,6 +32,9 @@
       if (stored === 'dark' || (!stored && prefersDark)) {
         document.documentElement.classList.add('dark');
       }
+      // Block dark mode extensions — site has its own theme system
+      document.documentElement.setAttribute('data-color-scheme', stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light');
+      document.documentElement.style.colorScheme = stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light';
     })();
   </script>
   <script type="application/ld+json">

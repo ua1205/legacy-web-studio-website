@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#FAF7F2" />
   <meta name="color-scheme" content="light dark" />
   <meta name="darkreader-lock" />
+  <meta name="night-eye-lock" />
   <meta name="description" content="Legacy Web Studio Privacy Policy — How we collect, use, and protect your personal data in accordance with UK GDPR." />
   <meta name="robots" content="noindex" />
   <title>Privacy Policy | Legacy Web Studio</title>
@@ -22,6 +23,9 @@
       if (stored === 'dark' || (!stored && prefersDark)) {
         document.documentElement.classList.add('dark');
       }
+      // Block dark mode extensions — site has its own theme system
+      document.documentElement.setAttribute('data-color-scheme', stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light');
+      document.documentElement.style.colorScheme = stored === 'dark' || (!stored && prefersDark) ? 'dark' : 'light';
     })();
   </script>
 </head>
