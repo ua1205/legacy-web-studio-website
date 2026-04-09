@@ -1895,6 +1895,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   background: #050816;
 }
 
+.dark .hero__eyebrow {
+  color: #5EEAD4;
+  background: rgba(94, 234, 212, 0.12);
+  border-color: rgba(94, 234, 212, 0.25);
+}
+
 /* Section flat backgrounds — each section has a distinct dark hue */
 .dark .why-us {
   background: #0D1B2A;
@@ -2122,12 +2128,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .btn-send__outline {
   position: absolute;
-  border-radius: inherit;
+  border-radius: calc(var(--send-radius) + 2px);
   overflow: hidden;
   z-index: 1;
   opacity: 0;
   transition: opacity 0.4s ease;
-  inset: -2px -3.5px;
+  inset: -2px;
 }
 
 .btn-send__outline::before {
@@ -2369,10 +2375,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .hero .btn-arrow:hover .btn-arrow__circle,
 .section--deep .btn-arrow:hover .btn-arrow__circle { background: var(--sunset-gold); }
 
-/* About: warm peach background — orange is invisible, use deep sunset */
+/* About: warm peach background — orange outline, readable dark text */
 .section--warm-accent .btn-arrow {
   color: var(--sunset-deep);
-  box-shadow: 0 0 0 2px var(--sunset-deep);
+  box-shadow: 0 0 0 2px var(--sunset-orange);
 }
 
 .section--warm-accent .btn-arrow__icon {
@@ -2380,7 +2386,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .section--warm-accent .btn-arrow__circle {
-  background: var(--sunset-orange);
+  background: var(--peach-deep);
 }
 
 .section--warm-accent .btn-arrow:hover {
@@ -2392,7 +2398,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .section--warm-accent .btn-arrow:hover .btn-arrow__circle {
-  background: var(--sunset-deep);
+  background: var(--sunset-orange);
 }
 
 /* Calendly banner: dark gradient background → light text */
@@ -2449,11 +2455,21 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- MICRO-INTERACTIONS ---- */
-#cursor-ripple-canvas {
+.cursor-glow {
   position: fixed;
-  inset: 0;
-  z-index: 9998;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
   pointer-events: none;
+  z-index: 9998;
+  background: radial-gradient(circle, rgba(234, 88, 12, 0.06) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+  will-change: transform;
+}
+.cursor-glow--hidden { opacity: 0; }
+.dark .cursor-glow {
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.06) 0%, transparent 70%);
 }
 
 .click-ripple {

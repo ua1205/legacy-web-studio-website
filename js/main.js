@@ -720,91 +720,35 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
   if (hasHover && !reducedMotion) {
 
-    // ── 4a. Motion-Reactive Cursor Ripples (canvas) ───────────────────────
-    const rippleCanvas = document.createElement('canvas');
-    rippleCanvas.id = 'cursor-ripple-canvas';
-    document.body.appendChild(rippleCanvas);
-    const rCtx = rippleCanvas.getContext('2d');
+    // ── 4a. Cursor Glow (80px, lerp trail) ────────────────────────────────
+    const glow = document.createElement('div');
+    glow.classList.add('cursor-glow', 'cursor-glow--hidden');
+    document.body.appendChild(glow);
 
-    const resizeRippleCanvas = () => {
-      rippleCanvas.width  = window.innerWidth;
-      rippleCanvas.height = window.innerHeight;
-    };
-    resizeRippleCanvas();
+    let glowX = 0, glowY = 0, targetX = 0, targetY = 0, glowVisible = false, glowRAF = null;
 
-    let resizeRippleTimer = null;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeRippleTimer);
-      resizeRippleTimer = setTimeout(resizeRippleCanvas, 150);
-    });
-
-    const MAX_RIPPLES = 30;
-    const ripples = [];
-    let lastRippleSpawn = 0;
-    let lastMouseX = 0, lastMouseY = 0;
-    let rippleLoopActive = false;
-    let rippleRAF = null;
-
-    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-    const lerp  = (a, b, t) => a + (b - a) * t;
-
-    const rippleLoop = () => {
-      rCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
-      const isDark = document.documentElement.classList.contains('dark');
-
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const r = ripples[i];
-        r.radius  += (r.maxRadius - r.radius) * 0.08;
-        r.opacity -= 0.015;
-        if (r.opacity <= 0) { ripples.splice(i, 1); continue; }
-        rCtx.beginPath();
-        rCtx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
-        rCtx.strokeStyle = isDark
-          ? `rgba(45, 212, 191, ${r.opacity})`
-          : `rgba(234, 88, 12, ${r.opacity})`;
-        rCtx.lineWidth = 1.5;
-        rCtx.stroke();
-      }
-
-      if (rippleLoopActive || ripples.length > 0) {
-        rippleRAF = requestAnimationFrame(rippleLoop);
-      } else {
-        rippleRAF = null;
-      }
+    const updateGlow = () => {
+      glowX += (targetX - glowX) * 0.15;
+      glowY += (targetY - glowY) * 0.15;
+      glow.style.left = glowX + 'px';
+      glow.style.top = glowY + 'px';
+      if (glowVisible) glowRAF = requestAnimationFrame(updateGlow);
     };
 
     document.documentElement.addEventListener('mousemove', (e) => {
-      const dx  = e.clientX - lastMouseX;
-      const dy  = e.clientY - lastMouseY;
-      const vel = Math.hypot(dx, dy);
-      lastMouseX = e.clientX;
-      lastMouseY = e.clientY;
-
-      if (vel < 2) return;
-
-      const now = Date.now();
-      if (now - lastRippleSpawn < 40) return;
-      lastRippleSpawn = now;
-
-      const t           = clamp((vel - 2) / (30 - 2), 0, 1);
-      const startOpacity = lerp(0.03, 0.08, t);
-      const maxRadius    = lerp(20, 60, t);
-
-      if (ripples.length >= MAX_RIPPLES) ripples.shift();
-      ripples.push({ x: e.clientX, y: e.clientY, radius: 0, opacity: startOpacity, maxRadius });
-
-      if (!rippleLoopActive && !rippleRAF) rippleRAF = requestAnimationFrame(rippleLoop);
+      targetX = e.clientX;
+      targetY = e.clientY;
+      if (!glowVisible) {
+        glowVisible = true;
+        glow.classList.remove('cursor-glow--hidden');
+        glowRAF = requestAnimationFrame(updateGlow);
+      }
     });
 
     document.documentElement.addEventListener('mouseleave', () => {
-      rippleLoopActive = false;
-      ripples.length = 0;
-      if (rippleRAF) { cancelAnimationFrame(rippleRAF); rippleRAF = null; }
-      rCtx.clearRect(0, 0, rippleCanvas.width, rippleCanvas.height);
-    });
-
-    document.documentElement.addEventListener('mouseenter', () => {
-      rippleLoopActive = true;
+      glowVisible = false;
+      glow.classList.add('cursor-glow--hidden');
+      if (glowRAF) cancelAnimationFrame(glowRAF);
     });
 
     // ── 4b. Click Ripple ───────────────────────────────────────────────────
@@ -828,7 +772,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll('.btn-arrow').forEach(btn => {
       btn.addEventListener('mouseenter', () => {
         const rect = btn.getBoundingClientRect();
-        const size = Math.ceil(Math.hypot(rect.width, rect.height)) + 20;
+        const size = Math.ceil(Math.hypot(rect.width, rect.height)) + 40;
         btn.style.setProperty('--circle-size', size + 'px');
       });
     });
