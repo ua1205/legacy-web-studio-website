@@ -715,7 +715,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
 // ── Section 10: Micro-Interactions ──────────────────────────────────────────
 {
-  const hasHover = window.matchMedia('(pointer: fine)').matches;
+  const hasHover = !('ontouchstart' in window);
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (hasHover && !reducedMotion) {
