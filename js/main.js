@@ -22,6 +22,7 @@ class SunsetCanvas {
     this.w = 0;
     this.h = 0;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    this.isMobile = window.innerWidth < 768;
 
     // Orbs: spatial config only — colours sourced from active palette
     this.orbs = [
@@ -142,7 +143,8 @@ class SunsetCanvas {
     // ── Orbs (screen blend — additive light) ────────────
     ctx.globalCompositeOperation = 'screen';
 
-    this.orbs.forEach((orb, i) => {
+    const orbLimit = this.isMobile ? 3 : this.orbs.length;
+    this.orbs.slice(0, orbLimit).forEach((orb, i) => {
       const orbCol = pal.orbs[i];
       const fx = Math.sin(t * orb.s       + orb.p) * 0.038;
       const fy = Math.cos(t * orb.s * 0.7 + orb.p) * 0.030;
@@ -185,6 +187,13 @@ class SunsetCanvas {
   _loop() {
     if (!this.running) return;
     this.time += 0.004;
+    if (this.isMobile) {
+      this._skipFrame = !this._skipFrame;
+      if (this._skipFrame) {
+        requestAnimationFrame(() => this._loop());
+        return;
+      }
+    }
     this._draw();
     requestAnimationFrame(() => this._loop());
   }
