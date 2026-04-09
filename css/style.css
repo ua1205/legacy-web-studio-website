@@ -884,6 +884,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ---- WHY US ---- */
 .why-us {
   background: var(--cream);
+  position: relative;
   z-index: 1;
 }
 
@@ -2448,23 +2449,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* ---- MICRO-INTERACTIONS ---- */
-.cursor-glow {
+#cursor-ripple-canvas {
   position: fixed;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  pointer-events: none;
+  inset: 0;
   z-index: 9998;
-  background: radial-gradient(circle, rgba(234, 88, 12, 0.06) 0%, transparent 70%);
-  transform: translate(-50%, -50%);
-  transition: opacity 0.3s ease;
-  will-change: transform;
-}
-
-.cursor-glow--hidden { opacity: 0; }
-
-.dark .cursor-glow {
-  background: radial-gradient(circle, rgba(45, 212, 191, 0.06) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .click-ripple {
