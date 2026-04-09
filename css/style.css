@@ -2368,13 +2368,30 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .hero .btn-arrow:hover .btn-arrow__circle,
 .section--deep .btn-arrow:hover .btn-arrow__circle { background: var(--sunset-gold); }
 
-/* About: warm peach background — keep gold ring and fill on hover */
+/* About: warm peach background — orange is invisible, use deep sunset */
+.section--warm-accent .btn-arrow {
+  color: var(--sunset-deep);
+  box-shadow: 0 0 0 2px var(--sunset-deep);
+}
+
+.section--warm-accent .btn-arrow__icon {
+  fill: var(--sunset-deep);
+}
+
+.section--warm-accent .btn-arrow__circle {
+  background: var(--sunset-orange);
+}
+
 .section--warm-accent .btn-arrow:hover {
-  box-shadow: 0 0 0 2px var(--sunset-gold);
+  color: #fff;
+}
+
+.section--warm-accent .btn-arrow:hover .btn-arrow__icon {
+  fill: #fff;
 }
 
 .section--warm-accent .btn-arrow:hover .btn-arrow__circle {
-  background: var(--sunset-gold);
+  background: var(--sunset-deep);
 }
 
 /* Calendly banner: dark gradient background → light text */
