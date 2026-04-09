@@ -2067,6 +2067,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   box-shadow: inset 0 -1px 3px 0 rgba(255,255,255,1);
 }
 
+.btn-send:hover::after {
+  border-color: transparent;
+  box-shadow: none;
+}
+
 .btn-send::before {
   content: "";
   inset: 7px 6px 6px 6px;
@@ -2128,43 +2133,28 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .btn-send__outline {
   position: absolute;
-  border-radius: calc(var(--send-radius) + 2px);
+  border-radius: inherit;
   overflow: hidden;
   z-index: 1;
   opacity: 0;
   transition: opacity 0.4s ease;
-  inset: -2px;
+  inset: -3px;
 }
 
 .btn-send__outline::before {
   content: "";
   position: absolute;
-  inset: -100%;
-  background: conic-gradient(
-    from 180deg,
-    transparent 50%,
-    var(--sunset-purple) 62%,
-    var(--sunset-orange) 75%,
-    var(--sunset-gold) 85%,
-    transparent 100%
-  );
-  animation: btnSendSpin 2s linear infinite;
-  animation-play-state: paused;
+  inset: -3px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--sunset-purple), var(--sunset-orange), var(--sunset-gold));
+  z-index: -1;
 }
 
 .dark .btn-send__outline::before {
-  background: conic-gradient(
-    from 180deg,
-    transparent 50%,
-    #8B5CF6 62%,
-    #2DD4BF 75%,
-    #5EEAD4 85%,
-    transparent 100%
-  );
+  background: linear-gradient(135deg, #8B5CF6, #2DD4BF, #5EEAD4);
 }
 
 .btn-send:hover .btn-send__outline { opacity: 1; }
-.btn-send:hover .btn-send__outline::before { animation-play-state: running; }
 
 /* Sent state */
 .btn-send.sent .btn-send__state--default { position: absolute; }
@@ -2214,7 +2204,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   outline-offset: 3px;
 }
 
-@keyframes btnSendSpin { to { transform: rotate(360deg); } }
+
 
 @keyframes btnSendWave {
   30%  { opacity: 1; transform: translateY(4px); }
@@ -2378,7 +2368,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* About: warm peach background — orange outline, readable dark text */
 .section--warm-accent .btn-arrow {
   color: var(--sunset-deep);
-  box-shadow: 0 0 0 2px var(--sunset-orange);
+  box-shadow: 0 0 0 2px var(--sunset-gold);
 }
 
 .section--warm-accent .btn-arrow__icon {
@@ -2398,7 +2388,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .section--warm-accent .btn-arrow:hover .btn-arrow__circle {
-  background: var(--sunset-orange);
+  background: var(--sunset-gold);
 }
 
 /* Calendly banner: dark gradient background → light text */
