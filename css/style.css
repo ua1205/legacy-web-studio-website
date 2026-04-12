@@ -337,7 +337,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .nav__link--cta {
-  background: var(--sunset-orange);
+  background: var(--sunset-coral);
   color: #fff !important;
   padding: 9px 18px;
   border-radius: var(--r-md);
@@ -345,7 +345,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-size: 0.8rem;
 }
 .nav__link--cta:hover {
-  background: var(--sunset-coral);
+  background: #A33A0A;
   color: #fff !important;
 }
 
@@ -1417,7 +1417,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .form__privacy a {
-  color: var(--sunset-orange);
+  color: var(--sunset-coral);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
