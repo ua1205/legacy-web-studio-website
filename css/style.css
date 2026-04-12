@@ -423,6 +423,26 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .nav__link.nav__link--pill:hover::after {
     width: 100%;
   }
+
+  /* Force dark header when mobile menu is open */
+  .nav-header.menu-open {
+    background: rgba(11, 13, 23, 0.97) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: none !important;
+  }
+
+  .nav-header.menu-open .logo-legacy {
+    fill: #ffffff !important;
+  }
+
+  .nav-header.menu-open .logo-sub {
+    fill: #6A1EA8 !important;
+  }
+
+  .nav-header.menu-open .nav__hamburger span {
+    background: #fff !important;
+  }
 }
 
 /* ---- THEME TOGGLE (Sun / Moon) ---- */
@@ -1728,6 +1748,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   fill: #A78BFA;
 }
 
+.dark .nav-header.menu-open .logo-sub {
+  fill: #A78BFA !important;
+}
+
 /* Hero overlay — adjust for dark palette */
 .dark .hero__overlay {
   background: linear-gradient(
@@ -2435,7 +2459,95 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .dark .section--deep .btn-arrow:hover .btn-arrow__circle { background: #5EEAD4; }
 
 @media (max-width: 700px) {
-  .btn-arrow { width: 100%; justify-content: center; }
+  .btn-arrow {
+    width: 100%;
+    justify-content: center;
+    box-shadow: none;
+    border: none;
+    border-radius: var(--r-md);
+    padding: 16px 28px;
+  }
+
+  /* Hide the circle and arrow icons — not needed on touch */
+  .btn-arrow__icon,
+  .btn-arrow__circle {
+    display: none !important;
+  }
+
+  /* Reset text position — no shift needed without arrows */
+  .btn-arrow__text {
+    transform: none;
+  }
+
+  /* ---- Context-specific mobile fills ---- */
+
+  /* Hero + Services (dark backgrounds): gold button, dark text */
+  .hero .btn-arrow,
+  .section--deep .btn-arrow {
+    background: var(--sunset-gold);
+    color: var(--sunset-deep);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+  }
+
+  .hero .btn-arrow:active,
+  .section--deep .btn-arrow:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+  }
+
+  /* About section (warm accent background): gold button, dark text */
+  .section--warm-accent .btn-arrow {
+    background: var(--sunset-gold);
+    color: var(--sunset-deep);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+  }
+
+  .section--warm-accent .btn-arrow:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+  }
+
+  /* Calendly banner (dark gradient background): gold button, dark text */
+  .contact__calendly-banner .btn-arrow {
+    background: var(--sunset-gold);
+    color: var(--sunset-deep);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+  }
+
+  .contact__calendly-banner .btn-arrow:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+  }
+
+  /* ---- Dark mode mobile overrides ---- */
+
+  .dark .hero .btn-arrow,
+  .dark .section--deep .btn-arrow {
+    background: #5EEAD4;
+    color: #0B0D17;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.25);
+  }
+
+  .dark .hero .btn-arrow:active,
+  .dark .section--deep .btn-arrow:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(94, 234, 212, 0.15);
+  }
+
+  .dark .btn-arrow,
+  .dark .section--warm-accent .btn-arrow,
+  .dark .contact__calendly-banner .btn-arrow {
+    background: #2DD4BF;
+    color: #0B0D17;
+    box-shadow: 0 4px 16px rgba(45, 212, 191, 0.25);
+  }
+
+  .dark .btn-arrow:active,
+  .dark .section--warm-accent .btn-arrow:active,
+  .dark .contact__calendly-banner .btn-arrow:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(45, 212, 191, 0.15);
+  }
 }
 
 /* ---- MICRO-INTERACTIONS ---- */

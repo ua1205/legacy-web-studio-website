@@ -278,6 +278,7 @@ const closeOnOutsideClick = (e) => {
     navLinks.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    navHeader.classList.remove('menu-open');
     document.removeEventListener('click', closeOnOutsideClick);
   }
 };
@@ -288,6 +289,7 @@ hamburger.addEventListener('click', () => {
   navLinks.classList.toggle('open', open);
   hamburger.setAttribute('aria-expanded', String(open));
   document.body.style.overflow = open ? 'hidden' : '';
+  navHeader.classList.toggle('menu-open', open);
   // Defer by one tick so this click doesn't immediately trigger closeOnOutsideClick
   if (open) {
     setTimeout(() => document.addEventListener('click', closeOnOutsideClick), 0);
@@ -303,6 +305,7 @@ navLinks.querySelectorAll('.nav__link').forEach(link => {
     navLinks.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    navHeader.classList.remove('menu-open');
     document.removeEventListener('click', closeOnOutsideClick);
   });
 });
@@ -314,6 +317,7 @@ document.addEventListener('keydown', (e) => {
     navLinks.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    navHeader.classList.remove('menu-open');
     document.removeEventListener('click', closeOnOutsideClick);
     hamburger.focus(); // Return focus to the trigger element
   }
@@ -326,6 +330,7 @@ window.addEventListener('resize', () => {
     navLinks.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    navHeader.classList.remove('menu-open');
     document.removeEventListener('click', closeOnOutsideClick);
   }
 }, { passive: true });
