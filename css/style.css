@@ -408,7 +408,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     padding: 0;
   }
 
-  /* Restore hover underline for pill links on mobile (pill pseudo-element excluded at desktop) */
+  /* Restore hover underline for pill links on mobile */
   .nav__link.nav__link--pill::after {
     content: '';
     position: absolute;
@@ -424,7 +424,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     width: 100%;
   }
 
-  /* Force dark header when mobile menu is open */
+  /* Force dark header bar when mobile menu is open */
   .nav-header.menu-open {
     background: rgba(11, 13, 23, 0.97) !important;
     backdrop-filter: blur(16px);
