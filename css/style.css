@@ -408,7 +408,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     padding: 0;
   }
 
-  /* Restore hover underline for pill links on mobile */
+  /* Restore hover underline for pill links on mobile (pill pseudo-element excluded at desktop) */
   .nav__link.nav__link--pill::after {
     content: '';
     position: absolute;
@@ -424,7 +424,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     width: 100%;
   }
 
-  /* Force dark header bar when mobile menu is open */
+  /* Force dark header when mobile menu is open */
   .nav-header.menu-open {
     background: rgba(11, 13, 23, 0.97) !important;
     backdrop-filter: blur(16px);
@@ -2468,20 +2468,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     padding: 16px 28px;
   }
 
-  /* Hide the circle and arrow icons — not needed on touch */
   .btn-arrow__icon,
   .btn-arrow__circle {
     display: none !important;
   }
 
-  /* Reset text position — no shift needed without arrows */
   .btn-arrow__text {
     transform: none;
   }
 
-  /* ---- Context-specific mobile fills ---- */
-
-  /* Hero + Services (dark backgrounds): gold button, dark text */
   .hero .btn-arrow,
   .section--deep .btn-arrow {
     background: var(--sunset-gold);
@@ -2495,7 +2490,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
   }
 
-  /* About section (warm accent background): gold button, dark text */
   .section--warm-accent .btn-arrow {
     background: var(--sunset-gold);
     color: var(--sunset-deep);
@@ -2507,7 +2501,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
   }
 
-  /* Calendly banner (dark gradient background): gold button, dark text */
   .contact__calendly-banner .btn-arrow {
     background: var(--sunset-gold);
     color: var(--sunset-deep);
@@ -2518,8 +2511,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     transform: scale(0.97);
     box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
   }
-
-  /* ---- Dark mode mobile overrides ---- */
 
   .dark .hero .btn-arrow,
   .dark .section--deep .btn-arrow {
