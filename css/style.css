@@ -379,12 +379,16 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
   .nav__links {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 28px;
-    background: rgba(11, 13, 23, 0.97);
-    backdrop-filter: blur(16px);
+    padding-top: 70px;
+    background: rgba(11, 13, 23, 0.98);
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--t) var(--ease);
@@ -427,8 +431,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   /* Force dark header when mobile menu is open */
   .nav-header.menu-open {
     background: rgba(11, 13, 23, 0.97) !important;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     box-shadow: none !important;
   }
 
