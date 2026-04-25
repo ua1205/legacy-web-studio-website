@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&family=Inter:wght@400;500&display=swap" as="style" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.min.css?v=11" />
+  <link rel="stylesheet" href="css/style.min.css?v=17" />
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
   <script>
     (function() {
@@ -406,82 +406,167 @@
       <div class="container">
         <div class="section__header fade-in">
           <p class="section__eyebrow">Our Work</p>
-          <h2 class="section__title">A Portfolio Built on Trust</h2>
+          <h2 class="section__title">See the <em>Difference</em></h2>
           <p class="section__desc">
-            We are a growing boutique studio. Our case studies are shared on request to protect client confidentiality. The placeholders below represent our current project pipeline.
+            Click a project to see the transformation — every site below was hand-coded from scratch.
           </p>
         </div>
 
         <div class="portfolio__grid stagger-in">
 
-          <div class="portfolio-card">
-            <div class="portfolio-card__visual portfolio-card__visual--a">
-              <div class="portfolio-card__visual-inner">
-                <div class="pv-line pv-line--wide"></div>
-                <div class="pv-line pv-line--med"></div>
-                <div class="pv-bar-row">
-                  <div class="pv-bar"></div>
-                  <div class="pv-bar pv-bar--tall"></div>
-                  <div class="pv-bar pv-bar--mid"></div>
+          <!-- Card 1: Estate Planning, York -->
+          <button class="showcase-card fade-in" data-showcase="0" aria-label="View before and after: Estate Planning Firm, York">
+            <div class="showcase-card__img">
+              <img src="assets/images/portfolio/bancroft-cole-after.jpg" alt="Redesigned estate planning website — warm Heritage design" loading="lazy" draggable="false" />
+              <span class="showcase-card__explore">Click to explore</span>
+            </div>
+            <div class="showcase-card__info">
+              <div class="showcase-card__meta">
+                <span class="showcase__tag">Estate Planning</span>
+                <span class="showcase__location">York</span>
+              </div>
+              <p class="showcase-card__desc">Outdated layout with no clear calls to action — replaced with a warm, conversion-focused Heritage design.</p>
+            </div>
+          </button>
+
+          <!-- Card 2: Probate, Bristol -->
+          <button class="showcase-card fade-in" data-showcase="1" aria-label="View before and after: Probate Specialist, Bristol">
+            <div class="showcase-card__img">
+              <img src="assets/images/portfolio/meadows-family-after.jpg" alt="Redesigned probate website — empathetic Guardian design" loading="lazy" draggable="false" />
+              <span class="showcase-card__explore">Click to explore</span>
+            </div>
+            <div class="showcase-card__info">
+              <div class="showcase-card__meta">
+                <span class="showcase__tag">Probate Law</span>
+                <span class="showcase__location">Bristol</span>
+              </div>
+              <p class="showcase-card__desc">Text-heavy pages with cluttered navigation — replaced with a clean, empathetic layout for grieving families.</p>
+            </div>
+          </button>
+
+          <!-- Card 3: Private Client, London -->
+          <button class="showcase-card fade-in" data-showcase="2" aria-label="View before and after: Private Client Practice, London">
+            <div class="showcase-card__img">
+              <img src="assets/images/portfolio/ashworth-private-client-after.jpg" alt="Redesigned private client website — premium Boutique design" loading="lazy" draggable="false" />
+              <span class="showcase-card__explore">Click to explore</span>
+            </div>
+            <div class="showcase-card__info">
+              <div class="showcase-card__meta">
+                <span class="showcase__tag">Private Client</span>
+                <span class="showcase__location">London</span>
+              </div>
+              <p class="showcase-card__desc">A generic template with stock imagery — replaced with a bespoke premium design hand-coded for perfect performance.</p>
+            </div>
+          </button>
+
+        </div>
+
+        <div class="portfolio__cta fade-in">
+          <p class="portfolio__cta-text">Want to see what we'd do for your firm?</p>
+          <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="btn-arrow">
+            <svg class="btn-arrow__icon btn-arrow__icon--left" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.17 11L10.81 5.64L12.22 4.22L20 12L12.22 19.78L10.81 18.36L16.17 13H4V11H16.17Z"/></svg>
+            <span class="btn-arrow__text">Get Your Free Mockup</span>
+            <span class="btn-arrow__circle" aria-hidden="true"></span>
+            <svg class="btn-arrow__icon btn-arrow__icon--right" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.17 11L10.81 5.64L12.22 4.22L20 12L12.22 19.78L10.81 18.36L16.17 13H4V11H16.17Z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Showcase Modal -->
+      <div class="showcase-modal" id="showcase-modal" role="dialog" aria-modal="true" aria-label="Project comparison" hidden>
+        <div class="showcase-modal__backdrop"></div>
+        <div class="showcase-modal__content">
+          <button class="showcase-modal__close" aria-label="Close comparison">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <!-- Slider 0: Bancroft Cole -->
+          <div class="showcase-modal__slide" data-slide="0">
+            <div class="showcase__slider" role="img" aria-label="Before and after comparison: Estate Planning Firm, York">
+              <div class="showcase__img-wrap showcase__img-wrap--after">
+                <img src="assets/images/portfolio/bancroft-cole-after.jpg" alt="Redesigned estate planning website" loading="lazy" draggable="false" />
+                <span class="showcase__label showcase__label--after">After</span>
+              </div>
+              <div class="showcase__img-wrap showcase__img-wrap--before">
+                <img src="assets/images/portfolio/bancroft-cole-before.jpg" alt="Original dated estate planning website" loading="lazy" draggable="false" />
+                <span class="showcase__label showcase__label--before">Before</span>
+              </div>
+              <div class="showcase__handle" role="slider" aria-label="Comparison slider" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" tabindex="0">
+                <div class="showcase__handle-line"></div>
+                <div class="showcase__handle-grip">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M6 10L2 10M2 10L5 7M2 10L5 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14 10L18 10M18 10L15 7M18 10L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
                 </div>
               </div>
-              <span class="portfolio-card__tag">Estate Planning</span>
             </div>
-            <div class="portfolio-card__body">
-              <h3 class="portfolio-card__title">Full Website Build — In Progress</h3>
-              <p class="portfolio-card__desc">Bespoke site design, local SEO strategy, and conversion-optimised landing pages for a specialist estate planning firm.</p>
-              <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="portfolio-card__cta">
-                Request Case Study <span aria-hidden="true">→</span>
-              </a>
+            <div class="showcase-modal__info">
+              <span class="showcase__tag">Estate Planning</span>
+              <span class="showcase__location">York</span>
+              <p class="showcase__desc">Outdated layout with poor mobile experience and no clear calls to action — replaced with a warm, conversion-focused design that builds trust from the first second.</p>
             </div>
           </div>
 
-          <div class="portfolio-card">
-            <div class="portfolio-card__visual portfolio-card__visual--b">
-              <div class="portfolio-card__visual-inner">
-                <div class="pv-grid">
-                  <div class="pv-cell"></div><div class="pv-cell pv-cell--tall"></div>
-                  <div class="pv-cell pv-cell--mid"></div><div class="pv-cell"></div>
+          <!-- Slider 1: Meadows Family -->
+          <div class="showcase-modal__slide" data-slide="1">
+            <div class="showcase__slider" role="img" aria-label="Before and after comparison: Probate Specialist, Bristol">
+              <div class="showcase__img-wrap showcase__img-wrap--after">
+                <img src="assets/images/portfolio/meadows-family-after.jpg" alt="Redesigned probate website" loading="lazy" draggable="false" />
+                <span class="showcase__label showcase__label--after">After</span>
+              </div>
+              <div class="showcase__img-wrap showcase__img-wrap--before">
+                <img src="assets/images/portfolio/meadows-family-before.jpg" alt="Original dated probate website" loading="lazy" draggable="false" />
+                <span class="showcase__label showcase__label--before">Before</span>
+              </div>
+              <div class="showcase__handle" role="slider" aria-label="Comparison slider" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" tabindex="0">
+                <div class="showcase__handle-line"></div>
+                <div class="showcase__handle-grip">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M6 10L2 10M2 10L5 7M2 10L5 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14 10L18 10M18 10L15 7M18 10L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
                 </div>
               </div>
-              <span class="portfolio-card__tag">Probate Law</span>
             </div>
-            <div class="portfolio-card__body">
-              <h3 class="portfolio-card__title">Rebrand &amp; Relaunch — Coming Soon</h3>
-              <p class="portfolio-card__desc">Complete rebrand and performance overhaul for an established probate practice looking to modernise its online presence.</p>
-              <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="portfolio-card__cta">
-                Request Case Study <span aria-hidden="true">→</span>
-              </a>
+            <div class="showcase-modal__info">
+              <span class="showcase__tag">Probate Law</span>
+              <span class="showcase__location">Bristol</span>
+              <p class="showcase__desc">Text-heavy pages with cluttered navigation and dated design — replaced with a clean, empathetic layout that guides families gently toward making contact.</p>
             </div>
           </div>
 
-          <div class="portfolio-card">
-            <div class="portfolio-card__visual portfolio-card__visual--c">
-              <div class="portfolio-card__visual-inner">
-                <div class="pv-circle-row">
-                  <div class="pv-circle"></div>
-                  <div class="pv-circle pv-circle--lg"></div>
-                  <div class="pv-circle"></div>
-                </div>
-                <div class="pv-line pv-line--wide" style="margin-top:12px"></div>
-                <div class="pv-line pv-line--narrow"></div>
+          <!-- Slider 2: Ashworth Private Client -->
+          <div class="showcase-modal__slide" data-slide="2">
+            <div class="showcase__slider" role="img" aria-label="Before and after comparison: Private Client Practice, London">
+              <div class="showcase__img-wrap showcase__img-wrap--after">
+                <img src="assets/images/portfolio/ashworth-private-client-after.jpg" alt="Redesigned private client website" loading="lazy" draggable="false" />
+                <span class="showcase__label showcase__label--after">After</span>
               </div>
-              <span class="portfolio-card__tag">Wills &amp; Trusts</span>
+              <div class="showcase__img-wrap showcase__img-wrap--before">
+                <img src="assets/images/portfolio/ashworth-private-client-before.jpg" alt="Original generic private client website" loading="lazy" draggable="false" />
+                <span class="showcase__label showcase__label--before">Before</span>
+              </div>
+              <div class="showcase__handle" role="slider" aria-label="Comparison slider" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" tabindex="0">
+                <div class="showcase__handle-line"></div>
+                <div class="showcase__handle-grip">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M6 10L2 10M2 10L5 7M2 10L5 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M14 10L18 10M18 10L15 7M18 10L15 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
             </div>
-            <div class="portfolio-card__body">
-              <h3 class="portfolio-card__title">SEO Campaign — In Progress</h3>
-              <p class="portfolio-card__desc">Local SEO and content strategy for a wills and trusts solicitor aiming to reach top Google rankings in their region.</p>
-              <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer" class="portfolio-card__cta">
-                Request Case Study <span aria-hidden="true">→</span>
-              </a>
+            <div class="showcase-modal__info">
+              <span class="showcase__tag">Private Client</span>
+              <span class="showcase__location">London</span>
+              <p class="showcase__desc">A generic template with stock imagery and poor performance — replaced with a bespoke, premium design hand-coded for perfect Core Web Vitals.</p>
             </div>
           </div>
 
         </div>
-
-        <p class="portfolio__note">
-          All case studies are shared under NDA. Interested in seeing relevant work to your firm's size and location? <a href="https://calendly.com/legacywebstudio" target="_blank" rel="noopener noreferrer">Book a call</a> and we'll walk you through it.
-        </p>
       </div>
     </section>
 
@@ -604,28 +689,16 @@
               <span class="form__error" id="message-error" role="alert"></span>
             </div>
             <button type="submit" class="btn-send" id="submit-btn">
-              <div class="btn-send__outline" aria-hidden="true"></div>
-              <div class="btn-send__state btn-send__state--default">
-                <div class="btn-send__icon">
-                  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    <path d="M14.22 21.63C13.04 21.63 11.37 20.8 10.05 16.83L9.33 14.67L7.17 13.95C3.21 12.63 2.38 10.96 2.38 9.78C2.38 8.61 3.21 6.93 7.17 5.6L15.66 2.77C17.78 2.06 19.55 2.27 20.64 3.35C21.73 4.43 21.94 6.21 21.23 8.33L18.4 16.82C17.07 20.8 15.4 21.63 14.22 21.63ZM7.64 7.03C4.86 7.96 3.87 9.06 3.87 9.78C3.87 10.5 4.86 11.6 7.64 12.52L10.16 13.36C10.38 13.43 10.56 13.61 10.63 13.83L11.47 16.35C12.39 19.13 13.5 20.12 14.22 20.12C14.94 20.12 16.04 19.13 16.97 16.35L19.8 7.86C20.31 6.32 20.22 5.06 19.57 4.41C18.92 3.76 17.66 3.68 16.13 4.19L7.64 7.03Z" fill="currentColor"/>
-                    <path d="M10.11 14.4C9.92 14.4 9.73 14.33 9.58 14.18C9.29 13.89 9.29 13.41 9.58 13.12L13.16 9.53C13.45 9.24 13.93 9.24 14.22 9.53C14.51 9.82 14.51 10.3 14.22 10.59L10.64 14.18C10.5 14.33 10.3 14.4 10.11 14.4Z" fill="currentColor"/>
-                  </svg>
-                </div>
-                <p>
-                  <span style="--i:0">S</span><span style="--i:1">e</span><span style="--i:2">n</span><span style="--i:3">d</span><span style="--i:4">&nbsp;</span><span style="--i:5">M</span><span style="--i:6">e</span><span style="--i:7">s</span><span style="--i:8">s</span><span style="--i:9">a</span><span style="--i:10">g</span><span style="--i:11">e</span>
-                </p>
-              </div>
-              <div class="btn-send__state btn-send__state--sent">
-                <div class="btn-send__icon">
-                  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke-width="0.5" stroke="currentColor">
-                    <path fill="currentColor" d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z"/>
-                    <path fill="currentColor" d="M10.58 15.58C10.38 15.58 10.19 15.5 10.05 15.36L7.22 12.53C6.93 12.24 6.93 11.76 7.22 11.47C7.51 11.18 7.99 11.18 8.28 11.47L10.58 13.77L15.72 8.63C16.01 8.34 16.49 8.34 16.78 8.63C17.07 8.92 17.07 9.4 16.78 9.69L11.11 15.36C10.97 15.5 10.78 15.58 10.58 15.58Z"/>
-                  </svg>
-                </div>
-                <p>
-                  <span style="--i:5">S</span><span style="--i:6">e</span><span style="--i:7">n</span><span style="--i:8">t</span>
-                </p>
+              <span class="btn-send__label btn-send__label--default">Send Message</span>
+              <span class="btn-send__label btn-send__label--sent" aria-hidden="true">Sent</span>
+              <div class="btn-send__icon" aria-hidden="true">
+                <svg class="btn-send__icon-svg btn-send__icon-svg--arrow" height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
+                </svg>
+                <svg class="btn-send__icon-svg btn-send__icon-svg--check" height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"></path>
+                </svg>
               </div>
             </button>
             <p class="form__privacy">
@@ -686,6 +759,6 @@
     </div>
   </footer>
 
-  <script src="js/main.min.js?v=11" defer></script>
+  <script src="js/main.min.js?v=14" defer></script>
 </body>
 </html>

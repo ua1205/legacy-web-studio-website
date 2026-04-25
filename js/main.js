@@ -816,3 +816,184 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 
   }
 }
+
+/* =========================================================
+   11. PORTFOLIO SHOWCASE MODAL + SLIDERS
+   Click thumbnail → open modal → auto-animate slider → manual control.
+   ========================================================= */
+{
+  const modal = document.getElementById('showcase-modal');
+  if (modal) {
+    const backdrop = modal.querySelector('.showcase-modal__backdrop');
+    const closeBtn = modal.querySelector('.showcase-modal__close');
+    const slides = modal.querySelectorAll('.showcase-modal__slide');
+    const cards = document.querySelectorAll('.showcase-card');
+    let activeSlider = null;
+    let autoAnimRAF = null;
+
+    // ── Slider logic (shared) ─────────────────────────
+    const initSlider = (slider) => {
+      const beforeWrap = slider.querySelector('.showcase__img-wrap--before');
+      const handle = slider.querySelector('.showcase__handle');
+      const beforeImg = beforeWrap.querySelector('img');
+      if (!beforeWrap || !handle) return null;
+
+      const syncImgWidth = () => {
+        if (beforeImg) beforeImg.style.width = slider.offsetWidth + 'px';
+      };
+
+      let isDragging = false;
+
+      const setPosition = (pct) => {
+        pct = Math.max(2, Math.min(98, pct));
+        beforeWrap.style.width = pct + '%';
+        handle.style.left = pct + '%';
+        handle.setAttribute('aria-valuenow', Math.round(pct));
+      };
+
+      const setFromClientX = (clientX) => {
+        const rect = slider.getBoundingClientRect();
+        const pct = ((clientX - rect.left) / rect.width) * 100;
+        setPosition(pct);
+      };
+
+      slider.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        setFromClientX(e.clientX);
+        e.preventDefault();
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        setFromClientX(e.clientX);
+      });
+
+      document.addEventListener('mouseup', () => { isDragging = false; });
+
+      slider.addEventListener('touchstart', (e) => {
+        isDragging = true;
+        setFromClientX(e.touches[0].clientX);
+      }, { passive: true });
+
+      slider.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        setFromClientX(e.touches[0].clientX);
+        e.preventDefault();
+      }, { passive: false });
+
+      slider.addEventListener('touchend', () => { isDragging = false; });
+
+      handle.addEventListener('keydown', (e) => {
+        const current = parseFloat(handle.style.left) || 50;
+        const step = 2;
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          setPosition(current - step);
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          setPosition(current + step);
+        }
+      });
+
+      return { setPosition, syncImgWidth, slider };
+    };
+
+    // Initialise all sliders in the modal
+    const sliders = [];
+    slides.forEach(slide => {
+      const sliderEl = slide.querySelector('.showcase__slider');
+      if (sliderEl) sliders.push(initSlider(sliderEl));
+    });
+
+    // ── Auto-animation ────────────────────────────────
+    const autoAnimate = (sliderObj) => {
+      if (!sliderObj) return;
+      const duration = 2000; // 2 seconds
+      const startPct = 85; // Start showing mostly "before"
+      const endPct = 15;   // End showing mostly "after"
+      const startTime = performance.now();
+
+      sliderObj.setPosition(startPct);
+
+      const step = (now) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease-in-out cubic
+        const eased = progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        const pct = startPct + (endPct - startPct) * eased;
+        sliderObj.setPosition(pct);
+        if (progress < 1) {
+          autoAnimRAF = requestAnimationFrame(step);
+        }
+      };
+
+      autoAnimRAF = requestAnimationFrame(step);
+    };
+
+    // ── Open modal ────────────────────────────────────
+    const openModal = (index) => {
+      // Cancel any running animation
+      if (autoAnimRAF) cancelAnimationFrame(autoAnimRAF);
+
+      // Hide all slides, show selected
+      slides.forEach(s => s.classList.remove('active'));
+      if (slides[index]) slides[index].classList.add('active');
+
+      // Show modal
+      modal.removeAttribute('hidden');
+      // Force reflow before adding open class for transition
+      modal.offsetHeight;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      // Sync slider image width and auto-animate
+      if (sliders[index]) {
+        sliders[index].syncImgWidth();
+        // Small delay to let the modal finish opening
+        setTimeout(() => autoAnimate(sliders[index]), 400);
+      }
+
+      // Focus the close button for accessibility
+      closeBtn.focus();
+    };
+
+    // ── Close modal ───────────────────────────────────
+    const closeModal = () => {
+      if (autoAnimRAF) cancelAnimationFrame(autoAnimRAF);
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+
+      // Wait for transition to finish before hiding
+      setTimeout(() => {
+        if (!modal.classList.contains('open')) {
+          modal.setAttribute('hidden', '');
+          slides.forEach(s => s.classList.remove('active'));
+        }
+      }, 350);
+    };
+
+    // ── Event listeners ───────────────────────────────
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const index = parseInt(card.dataset.showcase, 10);
+        openModal(index);
+      });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) {
+        closeModal();
+      }
+    });
+
+    // Sync slider widths on resize
+    window.addEventListener('resize', () => {
+      sliders.forEach(s => { if (s) s.syncImgWidth(); });
+    }, { passive: true });
+  }
+}
